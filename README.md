@@ -1,72 +1,60 @@
-# Comprehensive Technical Study & Engineering Showcase
+# My Technical Engineering Journey
+------------------------- I LOVE TECH !! ------------------------- 
+This repository is where I **learn, build, break things, fix them, and document what I learn** across Data Engineering, Data Analytics, AI/ML, Software Development, and DevOps.
 
-A structured repository documenting my journey across **Data Engineering**, **Data Analytics**, **Machine Learning**, **Software Architecture**, and **DevOps Infrastructure**.
+It contains my study notes, experiments, Jupyter notebooks, projects, pipelines, and the code I use to understand how things actually work.
 
-This repository combines theoretical study notes, concept deep-dives, interactive Jupyter notebooks, automated data pipelines, and production code architectures.
+## 🗺️ What I'm Learning
 
----
+```text
+Data Engineering
+├── SQL & Data Modeling
+├── Airflow
+├── Databricks & Snowflake
+├── Pandas / Polars
+└── ETL & Data Warehousing
 
-## 🗺️ Master Curriculum Overview
+Data Analytics & AI
+├── Analytics
+├── Mathematics & Statistics
+├── Machine Learning
+└── EDA
 
-```mermaid
-flowchart TD
-    subgraph Data Engineering & Warehousing
-        DE1["Apache Airflow"]
-        DE2["DataBricks & Spark"]
-        DE3["SQL & Relational Modeling"]
-        DE4["High-Performance ETL (Polars / Pandas)"]
-    end
-    subgraph Data Analytics & AI
-        DA1["Data Analytics Lifecycle"]
-        DA2["Mathematics & Statistics"]
-        DA3["Machine Learning"]
-    end
-    subgraph Software & Systems Engineering
-        SE1["Python Core & DSA"]
-        SE2["System Design & Distributed Architectures"]
-        SE3["Server & Internet Protocols"]
-        SE4["Docker & Kubernetes"]
-    end
+Software & Systems
+├── Python & DSA
+├── System Design
+├── Networking & Servers
+├── Docker
+└── Kubernetes
+
+Modern Data Stack
+├── DuckDB
+├── ClickHouse
+├── Kafka / Redpanda
+└── Vector Databases
 ```
 
----
+## 📂 Topics
 
-## 📂 Repository Topic Directory
+| Area                     | What you'll find                                                 |
+| ------------------------ | ---------------------------------------------------------------- |
+| **Apache Airflow**       | DAGs, TaskFlow, orchestration and Docker deployment              |
+| **Data Analytics**       | Analytics lifecycle, data cleaning, profiling and EDA            |
+| **Databricks**           | PySpark, Delta Lake and Medallion Architecture                   |
+| **Docker + Kubernetes**  | Containers, Linux internals, K8s and deployments                 |
+| **Git & GitHub**         | Git internals, branching, rebasing and CI/CD                     |
+| **Math & Statistics**    | Statistics, probability, hypothesis testing and time series      |
+| **Machine Learning**     | ML algorithms, regularization, ensembles and evaluation          |
+| **New Tech Stack**       | DuckDB, ClickHouse, Kafka/Redpanda and Vector DBs                |
+| **Python & DSA**         | Python internals, OOP, DSA, FastAPI and ETL projects             |
+| **Servers & Networking** | TCP/IP, DNS, Linux servers, VPNs and networking                  |
+| **SQL**                  | SQL fundamentals, joins, CTEs, indexes and window functions      |
+| **System Design**        | Scaling, caching, load balancing, queues and distributed systems |
 
-| Topic & Domain | Folder Link | Curriculum Summary |
-| :--- | :--- | :--- |
-| **Apache Airflow** | [Apache Airflow/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/Apache%20Airflow) | Orchestration fundamentals, DAG authoring, TaskFlow API, Executors, and complete Docker Compose deployment. |
-| **Data Analytics** | [Data Analytics/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/Data%20Analytics) | End-to-end 6-step analytics lifecycle, SQL data profiling, modular automated data cleaning, and EDA engines. |
-| **DataBricks** | [DataBricks/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/DataBricks) | PySpark distributed computing, Delta Lakehouse ACID transactions, and Medallion architecture (Bronze/Silver/Gold). |
-| **Docker + Kubernetes** | [Docker + KUBERNETES/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/Docker%20+%20KUBERNETES) | Linux namespaces/cgroups, Dockerfile multi-stage builds, K8s control plane, Pods, Deployments, and Services. |
-| **Git & Version Control** | [GitHub/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/GitHub) | Git plumbing/porcelain, branching strategies, interactive rebases, conflict resolution, and CI/CD actions. |
-| **Mathematics & Statistics** | [MATH/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/MATH) | Descriptive & inferential statistics, hypothesis testing (t-test, ANOVA, $\chi^2$), probability distributions, and time series. |
-| **Machine Learning** | [Machine Learning/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/Machine%20Learning) | Supervised/unsupervised algorithms, regularization, tree ensembles (XGBoost/LightGBM), and model evaluation metrics. |
-| **New Tech Stack** | [New Tech Stack/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/New%20Tech%20Stack) | Modern analytical OLAP engines (DuckDB, ClickHouse), streaming platforms (Kafka/Redpanda), and Vector databases. |
-| **Python Mastery & DSA** | [python/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/python) | 20+ DSA notebooks, CPython internals, OOP architecture, FastAPI, and hybrid ETL project using Pandas, Polars & SQL. |
-| **Server & Networking** | [Server_Internet_protocols/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/Server_Internet_protocols) | TCP/IP model, DNS resolution, NAT & Port Forwarding, Linux server provisioning, and Tailscale mesh VPN security. |
-| **Structured Query Language** | [SQL/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/SQL) | DDL/DML, index internals, relational joins, subqueries, CTEs, and advanced window functions. |
-| **System Design** | [System Design/](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/System%20Design) | Horizontal vs vertical scaling, load balancing, caching strategies, CAP theorem (PACELC), and message queues. |
+## 🚧 Still Building
 
----
+This repository is **not finished**.
 
-## 🛠️ Key Featured Implementations
+I'm studying and building every day, so new notes, experiments, projects and improvements will keep getting added.
 
-### 1. [Hybrid High-Performance ETL Engine](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/python/Pandas_Polars_Numpy/PROJECT)
-* Integrates **Pandas** for resilient database ingestion with **Polars** for multi-threaded columnar transformations.
-* Connects directly to MS SQL Server with automated fallback to local sample data.
-* Exports clean datasets into Snappy-compressed Apache Parquet format.
-
-### 2. [Automated Data Cleaning & Quality Engine](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/Data%20Analytics/2_Data_Transformation/2_data_cleaning/auto_cleaning.py)
-* Reusable OOP engine that inspects column data types, computes skewness to selectively impute numerical features (mean vs interpolation), forward-fills time series, and mode-imputes categorical fields.
-
-### 3. [Exploratory Data Analysis (EDA) Engine](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/Data%20Analytics/2_Data_Transformation/3_EDA/_EDA_.py)
-* Class-based analytical framework providing skewness assessment, statistical outlier detection via both $Z$-Score and Interquartile Range (IQR), and correlation matrix generation.
-
-### 4. [Dockerized Apache Airflow Environment](file:///C:/Users/PANRIT/ALL/Pranit%20Main/Study/Apache%20Airflow/airflow_project)
-* Production-ready local development stack with PostgreSQL metadata store, Redis broker, Webserver, Scheduler, and worker nodes.
-
----
-
-## 📌 Repository Purpose & Maintenance
-This repository serves as a permanent, actively maintained technical reference and showcase for engineering best practices, code clarity, and architectural understanding. All scripts and notebooks are designed to be reproducible, modular, and well-documented.
+Some things here may be messy or imperfect — that's intentional. **This is a record of how I learned, not just the final result.**
