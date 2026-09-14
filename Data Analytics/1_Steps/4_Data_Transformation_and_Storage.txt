@@ -1,0 +1,4 @@
+Clean raw data by handling missing values (imputation or removal), eliminating duplicate records, and resolving inconsistencies to ensure data integrity. 
+Transform and enrich data into analytical models (e.g., star schema or snowflake schema) through normalization, categorical encoding, date-time parsing, and metric aggregation. 
+Store processed datasets in an optimized, secure storage layer, such as a cloud data warehouse (Snowflake, BigQuery), lakehouse (Delta Lake), or indexed SQL database. 
+Ensure storage architecture supports high-performance querying, partitioning, indexing, and scalable downstream business intelligence.

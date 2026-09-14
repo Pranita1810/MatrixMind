@@ -1,0 +1,46 @@
+-- BASICS --
+	Apache Airflow is an open-source platform used to author, schedule, and monitor complex data pipelines and workflows.
+	Workflows are defined entirely as Python code, enabling dynamic pipeline generation, extensibility, and version control.
+
+-- DAG --
+	DAG (Directed Acyclic Graph): A mathematical and conceptual model in Airflow that represents a workflow without directed cycles (one-way execution flow with no circular dependencies).
+	A DAG is authored in Python code to define the structure, dependencies, and execution context of the pipeline.
+
+	Components:
+	1. Tasks / Operators: The basic unit of execution (e.g., PythonOperator, BashOperator, SQLExecuteQueryOperator, or TaskFlow API decorators). Tasks are executed by workers.
+	2. Dependencies: Upstream and downstream relationships that dictate execution order (defined using >> and << bitshift operators or set_upstream/set_downstream).
+	3. Schedule: The trigger interval or cron expression defining when and how often the pipeline executes (e.g., @daily, @hourly, cron expressions, or event-based dataset triggers).
+	4. Operational Details / Metadata: Parameters such as start_date, catchup, retries, retry_delay, and execution timeouts.
+	5. Executor: The mechanism that orchestrates and allocates task instances to worker processes.
+
+	Executors:
+	1. SequentialExecutor: Default single-node executor; runs one task at a time sequentially (uses SQLite; intended for local testing only).
+	2. LocalExecutor: Runs multiple tasks in parallel using Python multiprocessing on a single node (requires PostgreSQL/MySQL).
+	3. CeleryExecutor: Distributed executor; distributes task execution across a cluster of dedicated Celery worker nodes using message brokers (Redis or RabbitMQ).
+	4. KubernetesExecutor: Launches an isolated, dedicated Kubernetes pod for each task instance dynamically, scaling down to zero when idle.
+
+	Key Terminology:
+	1. DAG: Directed Acyclic Graph; a collection of tasks with defined dependency relationships.
+	2. DAG Run: A specific execution instance of a DAG for a given logical date.
+	3. Task: A defined unit of work within a DAG (instantiated via an Operator or @task decorator).
+	4. Task Instance: A specific run of a task for a particular DAG Run (has a lifecycle state: queued, running, success, failed, skipped, up_for_retry).
+	5. Logical Date (formerly execution_date): The logical point in time for which the DAG Run is processing data.
+	6. Data Interval: The time window of data that the DAG run covers (defined by data_interval_start and data_interval_end).
+	7. XCom (Cross-Communication): A lightweight mechanism to exchange small pieces of state, metadata, or parameters between tasks (persisted in the metadata DB; not intended for large data payloads).
+	8. Pools: Resource allocation slots used to limit concurrency and prevent overloading shared resources (e.g., external databases, API rate limits).
+	9. Hook: An abstraction layer and reusable client that interfaces Airflow with external services and systems (e.g., PostgresHook, S3Hook, HttpHook).
+	10. Connection: Stored credentials (host, port, login, password) used securely by Hooks.
+
+	The state and execution history of every DAG Run and Task Instance are persisted in the Airflow Metadata Database.
+
+-- WORKFLOW IMPLEMENTATION STEPS --
+	1. Install Prerequisites: Ensure Docker, Docker Compose, and Python are installed.
+	2. Initialize Project Structure: Set up dags/, logs/, plugins/, and config/ directories, along with docker-compose.yaml and requirements.txt.
+	3. Define the DAG: Instantiate the DAG with dag_id, schedule_interval, default_args, and catchup settings.
+	4. Implement Tasks: Write task logic using standard Operators or the TaskFlow API (@task).
+	5. Set Dependencies: Declare execution order and upstream/downstream dependencies (e.g., task_a >> task_b >> [task_c, task_d]).
+	6. Configure Environment: Set environment variables, Airflow UID, connections, and volume mounts in .env and docker-compose.yaml.
+	7. Initialize & Launch Containers: Run `docker compose up airflow-init` to initialize database schemas and admin credentials, followed by `docker compose up -d`.
+	8. Monitor via Airflow Web UI: Access the dashboard (http://localhost:8080) to inspect DAG graphs, trigger manual runs, check gantt charts, and review task logs.
+	9. Test & Debug: Run unit tests and CLI tests (`airflow tasks test <dag_id> <task_id> <execution_date>`) to verify task idempotency and error handling.
+	10. Production Deployment: Deploy to a managed environment (e.g., MWAA, Cloud Composer, or Kubernetes via Helm) with robust logging, alerting, and CI/CD pipelines.

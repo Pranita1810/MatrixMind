@@ -1,0 +1,21 @@
+----- PYTHON FASTAPI -----
+
+-- Overview --
+	FastAPI is a modern, high-performance web framework for building RESTful APIs with Python 3.8+ based on standard Python type hints.
+	It is powered by Starlette (for high-speed async networking) and Pydantic (for data validation and serialization).
+
+-- Key Features --
+	1. High Performance: On par with NodeJS and Go, thanks to asynchronous ASGI architecture (Uvicorn / Starlette).
+	2. Automatic Interactive Documentation: Generates interactive Swagger UI (/docs) and ReDoc (/redoc) automatically from code definitions.
+	3. Robust Data Validation: Strict runtime validation and deserialization using Pydantic models with clear error messages.
+	4. Type Safety: Native Python type hints enable full IDE autocompletion and static type checking.
+	5. Dependency Injection: Built-in, composable dependency injection system for authentication, database sessions, and configuration.
+	6. Asynchronous by Default: Native support for `async def` and coroutines (`await`).
+
+-- Core Concepts --
+	1. ASGI Application: The central app instance (`app = FastAPI()`).
+	2. Path Operations / Routes: Endpoints mapped to HTTP methods (`@app.get()`, `@app.post()`, `@app.put()`, `@app.delete()`).
+	3. Request & Response Schemas: Pydantic `BaseModel` classes defining expected request bodies and response models.
+	4. Path & Query Parameters: Type-hinted parameters validated automatically (e.g., `item_id: int`, `skip: int = 0`).
+	5. Middleware & CORS: Intercepting requests/responses for logging, security headers, and cross-origin resource sharing (`CORSMiddleware`).
+	6. Security & Auth: Integrated OAuth2 with Password hashing, Bearer JWT tokens, and API key verification.

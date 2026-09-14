@@ -1,0 +1,45 @@
+-- DOCKER OVERVIEW --
+Docker is an open-source containerization platform that allows developers to package applications and their dependencies into lightweight, isolated containers that run consistently across any environment.
+
+-- AIRFLOW ON DOCKER --
+Running Apache Airflow in Docker provides:
+- Consistent and reproducible development and production environments.
+- Isolation of dependencies (preventing library conflicts on the host system).
+- Seamless scalability and container orchestration via Docker Compose or Kubernetes.
+- Official production-ready Docker images maintained by the Apache Airflow community.
+
+-- STEP-BY-STEP DOCKER SETUP --
+1. Prepare Project Directory:
+   Create the project directory structure with folders for DAGs, logs, plugins, and config:
+   `mkdir -p dags logs plugins config`
+
+2. Obtain docker-compose.yaml:
+   Fetch the official docker-compose file for the target Airflow version:
+   `curl -LfO 'https://airflow.apache.org/docs/apache-airflow/stable/docker-compose.yaml'`
+
+3. Configure Environment (.env):
+   Set the Airflow UID to match your host system user (ensuring file volume permissions match):
+   Linux/macOS: `echo "AIRFLOW_UID=$(id -u)" > .env`
+   Windows: Set `AIRFLOW_UID=50000` or `1000` in `.env`.
+
+4. Customize Configuration:
+   Adjust `docker-compose.yaml` or `.env` as needed:
+   - Extra Python packages: `_PIP_ADDITIONAL_REQUIREMENTS="pandas pyodbc requests"`
+   - Port mappings (default Webserver UI is mapped to port 8080)
+   - Volume mounts for `./dags`, `./logs`, `./plugins`, `./config`
+
+5. Initialize Database & Services:
+   Run the database migration and create the default admin account:
+   `docker compose up airflow-init`
+
+6. Start Airflow:
+   Launch all services (Webserver, Scheduler, Triggerer, PostgreSQL, Redis) in detached mode:
+   `docker compose up -d`
+
+7. Access the Airflow UI:
+   Open your browser and navigate to:
+   http://localhost:8080 (Default credentials: username `airflow`, password `airflow`)
+
+8. Teardown / Maintenance:
+   To stop containers: `docker compose down`
+   To stop containers and wipe volumes: `docker compose down --volumes --remove-orphans`

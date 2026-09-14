@@ -1,0 +1,9 @@
+Clearly articulate the business challenge or opportunity you aim to address. 
+Identify the core objectives and constraints of the project to ensure all stakeholders are aligned. 
+A well-defined problem statement guides the entire analytics process and prevents scope creep. 
+Avoid vague descriptions; instead, focus on specific, measurable goals that the analysis should achieve. 
+This step is crucial for determining the necessary resources and setting the foundation for a successful data-driven project.
+
+For example:
+    - Business Context: Cafe Coffee Day runs multiple retail outlets nationwide.
+    - Problem Statement: Q3 net revenue dropped by 14% quarter-over-quarter despite marketing spend remaining constant, driven by an unknown combination of footfall decline and changing product mix.

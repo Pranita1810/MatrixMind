@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docker + Kubernetes Course</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e14;--bg2:#0d1117;--bg3:#161b22;--bg4:#1c2333;--border:#21262d;--blue:#58a6ff;--cyan:#39d0d8;--green:#3fb950;--orange:#f0883e;--red:#f85149;--purple:#bc8cff;--yellow:#e3b341;--text:#c9d1d9;--dim:#8b949e;--bright:#f0f6fc;--docker:#1d97c1;--k8s:#326ce5;--sw:280px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;display:flex;min-height:100vh}
+#sidebar{width:var(--sw);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:100;overflow-y:auto;transition:transform .3s}
+.slogo{padding:22px 18px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.licons{display:flex;gap:4px}
+.lic{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.lic.d{background:rgba(29,151,193,.15);color:var(--docker);border:1px solid rgba(29,151,193,.3)}
+.lic.k{background:rgba(50,108,229,.15);color:var(--k8s);border:1px solid rgba(50,108,229,.3)}
+.ltxt{font-size:12px;font-weight:700;color:var(--bright);line-height:1.3}
+.lsub{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace}
+.sdur{margin:10px 14px;background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.18);border-radius:7px;padding:7px 10px;font-size:10px;color:var(--blue);font-family:'JetBrains Mono',monospace;text-align:center}
+.nsec{padding:6px 0}
+.nlab{padding:6px 18px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 18px;cursor:pointer;color:var(--dim);font-size:12px;border-left:2px solid transparent;transition:all .15s;text-decoration:none}
+.ni:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border)}
+.ni.active{background:rgba(88,166,255,.07);color:var(--blue);border-left-color:var(--blue)}
+.ndot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.6}
+.ni.active .ndot{opacity:1}
+.nbadge{margin-left:auto;font-size:9px;font-family:'JetBrains Mono',monospace;background:var(--bg4);padding:2px 5px;border-radius:20px;color:var(--dim)}
+#main{margin-left:var(--sw);flex:1;max-width:100%}
+.hero{position:relative;padding:56px 56px 44px;background:linear-gradient(135deg,var(--bg2) 0%,#0d1a2e 50%,#0a1520 100%);border-bottom:1px solid var(--border);overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(88,166,255,.05) 0%,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);background:rgba(57,208,216,.07);border:1px solid rgba(57,208,216,.2);padding:4px 11px;border-radius:20px;margin-bottom:18px}
+.eyebrow::before{content:'▶';font-size:7px}
+h1{font-size:clamp(28px,3.5vw,46px);font-weight:800;color:var(--bright);line-height:1.15;margin-bottom:14px}
+h1 .dw{color:var(--docker)}
+h1 .kw{color:var(--k8s)}
+.hdesc{font-size:15px;color:var(--dim);max-width:580px;line-height:1.65;margin-bottom:24px}
+.htags{display:flex;flex-wrap:wrap;gap:7px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 10px;border-radius:4px;border:1px solid}
+.tag.py{color:var(--yellow);border-color:rgba(227,179,65,.3);background:rgba(227,179,65,.07)}
+.tag.hr{color:var(--green);border-color:rgba(63,185,80,.3);background:rgba(63,185,80,.07)}
+.tag.lv{color:var(--purple);border-color:rgba(188,140,255,.3);background:rgba(188,140,255,.07)}
+.mgrid{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border)}
+.mc{padding:18px 20px;border-right:1px solid var(--border);cursor:pointer;transition:background .15s;position:relative}
+.mc:last-child{border-right:none}
+.mc:hover{background:var(--bg3)}
+.mc.active{background:rgba(88,166,255,.05)}
+.mc.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--blue)}
+.mn{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:5px}
+.mt{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.3}
+.md{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim)}
+.mi{font-size:18px;margin-bottom:7px}
+.content{padding:0 56px 72px}
+.sec{display:none}
+.sec.active{display:block}
+.sh{padding:36px 0 28px;border-bottom:1px solid var(--border);margin-bottom:36px;display:flex;align-items:flex-start;gap:18px}
+.snum{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);background:var(--bg3);border:1px solid var(--border);padding:3px 9px;border-radius:4px;margin-top:5px;white-space:nowrap}
+h2{font-size:24px;font-weight:800;color:var(--bright)}
+h2 small{display:block;font-size:12px;font-weight:400;color:var(--dim);margin-top:3px;font-family:'JetBrains Mono',monospace}
+.sub{margin-bottom:44px}
+.sec.active .sub{animation:fadeUp .3s ease both}
+.sec.active .sub:nth-child(2){animation-delay:.05s}
+.sec.active .sub:nth-child(3){animation-delay:.1s}
+.sec.active .sub:nth-child(4){animation-delay:.15s}
+.sec.active .sub:nth-child(5){animation-delay:.2s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+h3{font-size:17px;font-weight:700;color:var(--bright);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+h3::before{content:'';display:inline-block;width:3px;height:17px;background:var(--blue);border-radius:2px;flex-shrink:0}
+h4{font-size:11px;font-weight:700;color:var(--cyan);font-family:'JetBrains Mono',monospace;margin:18px 0 7px;text-transform:uppercase;letter-spacing:.5px}
+p{color:var(--text);line-height:1.7;margin-bottom:12px;font-size:14px}
+strong{color:var(--bright);font-weight:600}
+code{background:var(--bg3);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);border:1px solid var(--border)}
+.cw{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin:14px 0;overflow:hidden}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.cl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.cl.bash{color:var(--green)}.cl.py{color:var(--yellow)}.cl.df{color:var(--docker)}.cl.yml{color:var(--purple)}.cl.txt{color:var(--dim)}
+.cpbtn{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);background:none;border:1px solid var(--border);padding:2px 8px;border-radius:4px;cursor:pointer;transition:all .15s}
+.cpbtn:hover{color:var(--text);border-color:var(--dim)}
+.cpbtn.ok{color:var(--green);border-color:var(--green)}
+pre{padding:18px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.65;color:var(--text);tab-size:2}
+.kw{color:var(--purple)}.fn{color:var(--blue)}.str{color:var(--green)}.cm{color:#6e7681;font-style:italic}.num{color:var(--orange)}.dk{color:var(--docker);font-weight:600}.yk{color:var(--blue)}.yv{color:var(--green)}.yc{color:#6e7681;font-style:italic}.ok2{color:var(--green)}.er{color:var(--red)}
+.tw{overflow-x:auto;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:12px;font-family:'JetBrains Mono',monospace}
+th{padding:9px 14px;text-align:left;background:var(--bg3);color:var(--dim);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border:1px solid var(--border)}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text);line-height:1.5;vertical-align:top}
+tr:nth-child(even) td{background:rgba(255,255,255,.012)}
+tr:hover td{background:rgba(88,166,255,.04)}
+td strong{color:var(--blue)}
+td code{background:var(--bg3);padding:1px 5px;border-radius:3px;font-size:11px;color:var(--cyan);border:1px solid var(--border)}
+.call{display:flex;gap:11px;padding:12px 14px;border-radius:8px;margin:14px 0;border:1px solid;font-size:13px;line-height:1.6}
+.ci{font-size:15px;flex-shrink:0;margin-top:1px}
+.call.warn{background:rgba(240,136,62,.07);border-color:rgba(240,136,62,.22);color:var(--orange)}
+.call.tip{background:rgba(63,185,80,.07);border-color:rgba(63,185,80,.22);color:var(--green)}
+.call.info{background:rgba(88,166,255,.07);border-color:rgba(88,166,255,.22);color:var(--blue)}
+.arch{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px;margin:14px 0;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.9;color:var(--dim);overflow-x:auto;white-space:pre}
+.ab{color:var(--blue)}.aa{color:var(--cyan)}.al{color:var(--text)}
+.cl2{list-style:none;display:flex;flex-direction:column;gap:5px;margin:10px 0}
+.cl2 li{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.5;padding:5px 0}
+.ck{color:var(--green);flex-shrink:0;margin-top:1px;font-size:12px}
+.cl2 li span{color:var(--text)}
+.pc{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin:18px 0;overflow:hidden}
+.ph{padding:12px 18px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.ps{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700}
+.sp{background:rgba(227,179,65,.12);color:var(--yellow)}
+.sc{background:rgba(248,81,73,.12);color:var(--red)}
+.si{background:rgba(240,136,62,.12);color:var(--orange)}
+.ss{background:rgba(188,140,255,.12);color:var(--purple)}
+.sr{background:rgba(57,208,216,.12);color:var(--cyan)}
+.pt{font-size:14px;font-weight:700;color:var(--bright)}
+.pb{padding:18px}
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+.qc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.qt{padding:9px 14px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:7px}
+.dt{color:var(--docker)}.kt{color:var(--k8s)}
+.qb pre{padding:12px 14px;font-size:11px}
+.pbar{position:fixed;top:0;left:var(--sw);right:0;height:2px;background:var(--border);z-index:200}
+.pfill{height:100%;background:linear-gradient(90deg,var(--docker),var(--cyan),var(--k8s));transition:width .3s;width:0%}
+.fnav{display:flex;justify-content:space-between;align-items:center;padding:22px 0 0;border-top:1px solid var(--border);margin-top:36px}
+.nbtn{display:flex;align-items:center;gap:8px;padding:9px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--dim);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;transition:all .15s}
+.nbtn:hover{background:var(--bg4);color:var(--text);border-color:var(--dim)}
+.nbtn.prim{background:rgba(88,166,255,.09);border-color:rgba(88,166,255,.28);color:var(--blue)}
+.nbtn.prim:hover{background:rgba(88,166,255,.18)}
+.mtoggle{display:none;position:fixed;top:11px;left:11px;z-index:300;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 9px;cursor:pointer;color:var(--text);font-size:15px}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+@media(max-width:900px){:root{--sw:0px}#sidebar{transform:translateX(-280px);width:280px}#sidebar.open{transform:translateX(0)}#main{margin-left:0}.mtoggle{display:flex}.mgrid{grid-template-columns:1fr 1fr}.hero{padding:44px 20px 32px}.content{padding:0 20px 56px}.qg{grid-template-columns:1fr}.pbar{left:0}}
+</style>
+</head>
+<body>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+<button class="mtoggle" onclick="toggleSidebar()">☰</button>
+<nav id="sidebar">
+  <div class="slogo">
+    <div class="licons"><div class="lic d">🐳</div><div class="lic k">☸</div></div>
+    <div><div class="ltxt">Docker + K8s</div><div class="lsub">Beginner → Advanced</div></div>
+  </div>
+  <div class="sdur">⏱ 7 Hours · Python · Microservices</div>
+  <div class="nsec">
+    <div class="nlab">Start</div>
+    <a class="ni active" onclick="show(0)" href="#"><div class="ndot"></div> Overview <span class="nbadge">intro</span></a>
+  </div>
+  <div class="nsec">
+    <div class="nlab">Docker</div>
+    <a class="ni" onclick="show(1)" href="#"><div class="ndot"></div> Module 1: Fundamentals <span class="nbadge">1.5h</span></a>
+    <a class="ni" onclick="show(2)" href="#"><div class="ndot"></div> Module 2: Advanced <span class="nbadge">1.5h</span></a>
+  </div>
+  <div class="nsec">
+    <div class="nlab">Kubernetes</div>
+    <a class="ni" onclick="show(3)" href="#"><div class="ndot"></div> Module 3: Fundamentals <span class="nbadge">1.5h</span></a>
+    <a class="ni" onclick="show(4)" href="#"><div class="ndot"></div> Module 4: Advanced <span class="nbadge">1.5h</span></a>
+  </div>
+  <div class="nsec">
+    <div class="nlab">Project</div>
+    <a class="ni" onclick="show(5)" href="#"><div class="ndot"></div> Module 5: Industry Project <span class="nbadge">1h</span></a>
+  </div>
+</nav>
+<main id="main">
+<div class="hero">
+  <div class="eyebrow">Full Stack DevOps · 2024 Edition</div>
+  <h1><span class="dw">Docker</span> + <span class="kw">Kubernetes</span><br>Beginner to Advanced</h1>
+  <p class="hdesc">Master containerization and orchestration from scratch. Build, deploy, and debug a real Python microservices project with industry-standard practices.</p>
+  <div class="htags">
+    <span class="tag py">🐍 Python 3.11</span>
+    <span class="tag hr">⏱ 7 Hours</span>
+    <span class="tag lv">📈 Beginner → Advanced</span>
+  </div>
+</div>
+<div class="mgrid">
+  <div class="mc active" onclick="show(1)"><div class="mi">🐳</div><div class="mn">MODULE 01</div><div class="mt">Docker Fundamentals</div><div class="md">1.5 hrs</div></div>
+  <div class="mc" onclick="show(2)"><div class="mi">🔧</div><div class="mn">MODULE 02</div><div class="mt">Docker Advanced &amp; Compose</div><div class="md">1.5 hrs</div></div>
+  <div class="mc" onclick="show(3)"><div class="mi">☸️</div><div class="mn">MODULE 03</div><div class="mt">Kubernetes Fundamentals</div><div class="md">1.5 hrs</div></div>
+  <div class="mc" onclick="show(4)"><div class="mi">⚡</div><div class="mn">MODULE 04</div><div class="mt">Kubernetes Advanced</div><div class="md">1.5 hrs</div></div>
+  <div class="mc" onclick="show(5)"><div class="mi">🏭</div><div class="mn">MODULE 05</div><div class="mt">Industry Project</div><div class="md">1 hr</div></div>
+</div>
+<div class="content">
+
+<!-- S0 OVERVIEW -->
+<div class="sec active" id="s0">
+<div class="sh"><div><h2>Course Overview <small>Click any module above or in the sidebar to begin</small></h2></div></div>
+<div class="sub"><h3>What You'll Learn</h3>
+<div class="tw"><table><tr><th>Module</th><th>Topic</th><th>Key Skills</th><th>Time</th></tr>
+<tr><td><strong>01</strong></td><td>Docker Fundamentals</td><td>Images, containers, Dockerfile, volumes, networks</td><td>1.5h</td></tr>
+<tr><td><strong>02</strong></td><td>Docker Advanced</td><td>Multi-stage builds, Compose, env vars, health checks</td><td>1.5h</td></tr>
+<tr><td><strong>03</strong></td><td>K8s Fundamentals</td><td>Pods, Deployments, Services, ConfigMap, Secrets</td><td>1.5h</td></tr>
+<tr><td><strong>04</strong></td><td>K8s Advanced</td><td>HPA, Ingress, StatefulSets, RBAC, rolling updates</td><td>1.5h</td></tr>
+<tr><td><strong>05</strong></td><td>Industry Project</td><td>Full microservices deploy, CI/CD, 5 debug scenarios</td><td>1h</td></tr>
+</table></div></div>
+<div class="sub"><h3>Project Architecture</h3>
+<p>You'll build a Python Flask + Redis Task Manager, containerize it, and deploy on K8s with autoscaling and zero-downtime updates.</p>
+<div class="arch"><span class="aa">Internet</span>
+   │
+<span class="ab">[Ingress]</span>
+   │
+   ├──▶ <span class="ab">[API Service]</span>      <span class="aa">→</span> <span class="al">[Flask API × 3 pods]</span>
+   │         │
+   │    <span class="ab">[Redis Service]</span>   <span class="aa">→</span> <span class="al">[Redis StatefulSet × 1]</span>
+   │
+   └──▶ <span class="ab">[Worker Service]</span>   <span class="aa">→</span> <span class="al">[Worker Deployment × 2]</span></div></div>
+<div class="fnav"><span></span><button class="nbtn prim" onclick="show(1)">Start Module 1 →</button></div>
+</div>
+
+<!-- S1 DOCKER FUNDAMENTALS -->
+<div class="sec" id="s1">
+<div class="sh"><span class="snum">MODULE 01</span><div><h2>Docker Fundamentals <small>🐳 Images · Containers · Dockerfile · Volumes · 1.5 hrs</small></h2></div></div>
+<div class="sub"><h3>1.1 What is Docker?</h3>
+<p>Docker packages your app + its environment into a <strong>container</strong> — a portable, isolated unit that runs identically everywhere.</p>
+<div class="tw"><table><tr><th>Term</th><th>Meaning</th></tr>
+<tr><td><strong>Image</strong></td><td>Blueprint / snapshot (like a class definition)</td></tr>
+<tr><td><strong>Container</strong></td><td>Running instance of an image (like an object)</td></tr>
+<tr><td><strong>Dockerfile</strong></td><td>Recipe / instructions to build an image</td></tr>
+<tr><td><strong>Registry</strong></td><td>Remote store for images (Docker Hub, ECR, GCR)</td></tr>
+<tr><td><strong>Layer</strong></td><td>Each Dockerfile instruction creates a cached layer</td></tr>
+</table></div></div>
+<div class="sub"><h3>1.2 Install Docker</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># Ubuntu/Debian</span>
+sudo apt-get update && sudo apt-get install docker.io -y
+sudo systemctl start docker
+sudo usermod -aG docker $USER   <span class="cm"># run without sudo (re-login)</span>
+
+<span class="cm"># macOS</span>
+brew install --cask docker
+
+<span class="cm"># Verify</span>
+docker --version
+docker run hello-world</pre></div></div>
+<div class="sub"><h3>1.3 Your First Dockerfile</h3>
+<h4>app.py</h4>
+<div class="cw"><div class="ch"><span class="cl py">python</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="kw">from</span> flask <span class="kw">import</span> Flask, jsonify, request
+
+app = Flask(__name__)
+tasks = []
+
+<span class="fn">@app.route</span>(<span class="str">"/tasks"</span>, methods=[<span class="str">"GET"</span>])
+<span class="kw">def</span> <span class="fn">get_tasks</span>():
+    <span class="kw">return</span> jsonify(tasks)
+
+<span class="fn">@app.route</span>(<span class="str">"/tasks"</span>, methods=[<span class="str">"POST"</span>])
+<span class="kw">def</span> <span class="fn">add_task</span>():
+    task = request.json
+    tasks.append(task)
+    <span class="kw">return</span> jsonify(task), <span class="num">201</span>
+
+<span class="fn">@app.route</span>(<span class="str">"/health"</span>)
+<span class="kw">def</span> <span class="fn">health</span>():
+    <span class="kw">return</span> jsonify({<span class="str">"status"</span>: <span class="str">"ok"</span>})
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    app.run(host=<span class="str">"0.0.0.0"</span>, port=<span class="num">5000</span>)</pre></div>
+<h4>Dockerfile</h4>
+<div class="cw"><div class="ch"><span class="cl df">dockerfile</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># Always use specific tags, not :latest</span>
+<span class="dk">FROM</span> python:3.11-slim
+
+<span class="dk">WORKDIR</span> /app
+
+<span class="cm"># Copy deps first — leverages layer cache</span>
+<span class="dk">COPY</span> requirements.txt .
+<span class="dk">RUN</span> pip install --no-cache-dir -r requirements.txt
+
+<span class="dk">COPY</span> . .
+<span class="dk">EXPOSE</span> 5000
+<span class="dk">CMD</span> ["python", "app.py"]</pre></div>
+<h4>Build &amp; Run</h4>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre>docker build -t task-api:v1 .
+docker run -p 5000:5000 task-api:v1
+curl http://localhost:5000/tasks</pre></div></div>
+<div class="sub"><h3>1.4 Essential Commands</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># Images</span>
+docker images                          <span class="cm"># list local images</span>
+docker pull nginx
+docker rmi task-api:v1
+docker tag task-api:v1 myuser/task-api:v1
+
+<span class="cm"># Containers</span>
+docker ps                              <span class="cm"># running</span>
+docker ps -a                           <span class="cm"># all including stopped</span>
+docker run -d -p 5000:5000 task-api:v1 <span class="cm"># detached</span>
+docker stop &lt;id&gt; && docker rm &lt;id&gt;
+docker logs &lt;id&gt;
+docker exec -it &lt;id&gt; bash
+
+<span class="cm"># Cleanup</span>
+docker system prune                    <span class="cm"># stopped containers + dangling images</span>
+docker volume prune</pre></div></div>
+<div class="sub"><h3>1.5 Dockerfile Best Practices</h3>
+<div class="cw"><div class="ch"><span class="cl df">dockerfile</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># ✅ Specific tag — never :latest in production</span>
+<span class="dk">FROM</span> python:3.11-slim
+
+<span class="cm"># ✅ Layer caching — deps BEFORE code</span>
+<span class="dk">COPY</span> requirements.txt .
+<span class="dk">RUN</span> pip install -r requirements.txt
+<span class="dk">COPY</span> . .      <span class="cm"># code changes don't bust pip cache</span>
+
+<span class="cm"># ✅ Non-root user for security</span>
+<span class="dk">RUN</span> adduser --disabled-password appuser
+<span class="dk">USER</span> appuser
+
+<span class="cm"># ✅ Explicit entrypoint</span>
+<span class="dk">ENTRYPOINT</span> ["python"]
+<span class="dk">CMD</span> ["app.py"]</pre></div>
+<div class="call warn"><span class="ci">⚠️</span>Always create <code>.dockerignore</code> — exclude <code>__pycache__</code>, <code>.git</code>, <code>*.pyc</code>, <code>.env</code>, <code>venv/</code></div></div>
+<div class="sub"><h3>1.6 Volumes &amp; Networks</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># Named Volume — persists after container dies</span>
+docker volume create mydata
+docker run -v mydata:/app/data task-api:v1
+
+<span class="cm"># Bind Mount — local dir hot-reloaded (dev)</span>
+docker run -v $(pwd):/app task-api:v1
+
+<span class="cm"># Custom Network — containers talk by hostname</span>
+docker network create mynet
+docker run --network mynet --name api task-api:v1
+docker run --network mynet --name db postgres:15
+<span class="cm"># "api" reaches "db" by hostname "db"</span></pre></div></div>
+<div class="fnav"><button class="nbtn" onclick="show(0)">← Overview</button><button class="nbtn prim" onclick="show(2)">Module 2 →</button></div>
+</div>
+
+<!-- S2 DOCKER ADVANCED -->
+<div class="sec" id="s2">
+<div class="sh"><span class="snum">MODULE 02</span><div><h2>Docker Advanced &amp; Compose <small>🔧 Multi-stage · Compose · Env vars · Health checks · 1.5 hrs</small></h2></div></div>
+<div class="sub"><h3>2.1 Multi-Stage Builds</h3>
+<p>Produce lean production images by separating the build environment from the runtime environment.</p>
+<div class="cw"><div class="ch"><span class="cl df">dockerfile</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># Stage 1: heavy builder</span>
+<span class="dk">FROM</span> python:3.11 <span class="dk">AS</span> builder
+<span class="dk">WORKDIR</span> /app
+<span class="dk">COPY</span> requirements.txt .
+<span class="dk">RUN</span> pip install --user -r requirements.txt
+
+<span class="cm"># Stage 2: lean production image</span>
+<span class="dk">FROM</span> python:3.11-slim
+<span class="dk">WORKDIR</span> /app
+<span class="dk">COPY</span> --from=builder /root/.local /root/.local
+<span class="dk">COPY</span> . .
+<span class="dk">ENV</span> PATH=/root/.local/bin:$PATH
+<span class="dk">CMD</span> ["python", "app.py"]</pre></div>
+<div class="call tip"><span class="ci">✅</span>Multi-stage can shrink images from <strong>~1GB → ~100MB</strong>. Run <code>docker images</code> after to compare.</div></div>
+<div class="sub"><h3>2.2 Docker Compose</h3>
+<h4>api/app.py (with Redis)</h4>
+<div class="cw"><div class="ch"><span class="cl py">python</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="kw">from</span> flask <span class="kw">import</span> Flask, jsonify, request
+<span class="kw">import</span> redis, json, os
+
+app = Flask(__name__)
+r = redis.Redis(host=os.getenv(<span class="str">"REDIS_HOST"</span>, <span class="str">"redis"</span>), port=<span class="num">6379</span>)
+
+<span class="fn">@app.route</span>(<span class="str">"/tasks"</span>, methods=[<span class="str">"GET"</span>])
+<span class="kw">def</span> <span class="fn">get_tasks</span>():
+    tasks = r.lrange(<span class="str">"tasks"</span>, <span class="num">0</span>, <span class="num">-1</span>)
+    <span class="kw">return</span> jsonify([json.loads(t) <span class="kw">for</span> t <span class="kw">in</span> tasks])
+
+<span class="fn">@app.route</span>(<span class="str">"/tasks"</span>, methods=[<span class="str">"POST"</span>])
+<span class="kw">def</span> <span class="fn">add_task</span>():
+    task = request.json
+    r.rpush(<span class="str">"tasks"</span>, json.dumps(task))
+    <span class="kw">return</span> jsonify(task), <span class="num">201</span></pre></div>
+<h4>docker-compose.yml</h4>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">version</span>: <span class="yv">"3.9"</span>
+
+<span class="yk">services</span>:
+  <span class="yk">api</span>:
+    <span class="yk">build</span>: <span class="yv">./api</span>
+    <span class="yk">ports</span>:
+      - <span class="yv">"5000:5000"</span>
+    <span class="yk">environment</span>:
+      - <span class="yv">REDIS_HOST=redis</span>
+    <span class="yk">depends_on</span>:
+      - <span class="yv">redis</span>
+    <span class="yk">restart</span>: <span class="yv">unless-stopped</span>
+    <span class="yk">volumes</span>:
+      - <span class="yv">./api:/app</span>     <span class="yc"># dev hot reload</span>
+
+  <span class="yk">worker</span>:
+    <span class="yk">build</span>: <span class="yv">./worker</span>
+    <span class="yk">environment</span>:
+      - <span class="yv">REDIS_HOST=redis</span>
+    <span class="yk">depends_on</span>:
+      - <span class="yv">redis</span>
+    <span class="yk">restart</span>: <span class="yv">unless-stopped</span>
+
+  <span class="yk">redis</span>:
+    <span class="yk">image</span>: <span class="yv">redis:7-alpine</span>
+    <span class="yk">volumes</span>:
+      - <span class="yv">redis_data:/data</span>
+
+<span class="yk">volumes</span>:
+  <span class="yk">redis_data</span>:</pre></div>
+<h4>Compose Commands</h4>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre>docker compose up -d           <span class="cm"># start all (detached)</span>
+docker compose up --build      <span class="cm"># rebuild and start</span>
+docker compose ps              <span class="cm"># status</span>
+docker compose logs api        <span class="cm"># logs for one service</span>
+docker compose logs -f         <span class="cm"># follow all logs</span>
+docker compose down            <span class="cm"># stop + remove containers</span>
+docker compose down -v         <span class="cm"># also remove volumes</span>
+docker compose exec api bash   <span class="cm"># shell into service</span></pre></div></div>
+<div class="sub"><h3>2.3 Env Vars &amp; Health Checks</h3>
+<div class="call warn"><span class="ci">⚠️</span>Never commit <code>.env</code> to git! Always add it to <code>.gitignore</code>.</div>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">services</span>:
+  <span class="yk">api</span>:
+    <span class="yk">env_file</span>:
+      - <span class="yv">.env</span>
+    <span class="yk">healthcheck</span>:
+      <span class="yk">test</span>: [<span class="yv">"CMD"</span>, <span class="yv">"curl"</span>, <span class="yv">"-f"</span>, <span class="yv">"http://localhost:5000/health"</span>]
+      <span class="yk">interval</span>: <span class="yv">30s</span>
+      <span class="yk">timeout</span>: <span class="yv">10s</span>
+      <span class="yk">retries</span>: <span class="yv">3</span>
+      <span class="yk">start_period</span>: <span class="yv">15s</span>
+
+  <span class="yk">redis</span>:
+    <span class="yk">healthcheck</span>:
+      <span class="yk">test</span>: [<span class="yv">"CMD"</span>, <span class="yv">"redis-cli"</span>, <span class="yv">"ping"</span>]
+      <span class="yk">interval</span>: <span class="yv">10s</span>
+      <span class="yk">retries</span>: <span class="yv">5</span></pre></div></div>
+<div class="fnav"><button class="nbtn" onclick="show(1)">← Module 1</button><button class="nbtn prim" onclick="show(3)">Module 3: K8s →</button></div>
+</div>
+
+<!-- S3 K8S FUNDAMENTALS -->
+<div class="sec" id="s3">
+<div class="sh"><span class="snum">MODULE 03</span><div><h2>Kubernetes Fundamentals <small>☸️ Pods · Deployments · Services · ConfigMap · Secrets · 1.5 hrs</small></h2></div></div>
+<div class="sub"><h3>3.1 What is Kubernetes?</h3>
+<p>Kubernetes orchestrates containers at scale — <strong>scheduling, self-healing, load balancing, and rolling updates</strong> automatically.</p>
+<div class="tw"><table><tr><th>Object</th><th>Role</th></tr>
+<tr><td><strong>Pod</strong></td><td>Smallest unit — 1+ containers sharing network &amp; storage</td></tr>
+<tr><td><strong>Deployment</strong></td><td>Manages Pods — rolling updates, replicas, self-healing</td></tr>
+<tr><td><strong>Service</strong></td><td>Stable network endpoint to reach a set of Pods</td></tr>
+<tr><td><strong>ConfigMap</strong></td><td>Non-secret configuration as key-value pairs</td></tr>
+<tr><td><strong>Secret</strong></td><td>Sensitive data (base64-encoded)</td></tr>
+<tr><td><strong>Namespace</strong></td><td>Logical cluster isolation (dev/staging/prod)</td></tr>
+<tr><td><strong>Ingress</strong></td><td>HTTP/HTTPS routing to Services</td></tr>
+<tr><td><strong>PVC</strong></td><td>Persistent storage claim for stateful workloads</td></tr>
+</table></div></div>
+<div class="sub"><h3>3.2 Minikube Setup</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># Install kubectl</span>
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+
+<span class="cm"># Install Minikube</span>
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+minikube start --cpus=2 --memory=4g
+kubectl cluster-info && kubectl get nodes</pre></div></div>
+<div class="sub"><h3>3.3 Deployment YAML</h3>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">apiVersion</span>: <span class="yv">apps/v1</span>
+<span class="yk">kind</span>: <span class="yv">Deployment</span>
+<span class="yk">metadata</span>:
+  <span class="yk">name</span>: <span class="yv">task-api</span>
+<span class="yk">spec</span>:
+  <span class="yk">replicas</span>: <span class="num">3</span>
+  <span class="yk">selector</span>:
+    <span class="yk">matchLabels</span>:
+      <span class="yk">app</span>: <span class="yv">task-api</span>
+  <span class="yk">template</span>:
+    <span class="yk">metadata</span>:
+      <span class="yk">labels</span>:
+        <span class="yk">app</span>: <span class="yv">task-api</span>
+    <span class="yk">spec</span>:
+      <span class="yk">containers</span>:
+      - <span class="yk">name</span>: <span class="yv">task-api</span>
+        <span class="yk">image</span>: <span class="yv">yourusername/task-api:v1</span>
+        <span class="yk">ports</span>:
+        - <span class="yk">containerPort</span>: <span class="num">5000</span>
+        <span class="yk">resources</span>:
+          <span class="yk">requests</span>:
+            <span class="yk">memory</span>: <span class="yv">"64Mi"</span>
+            <span class="yk">cpu</span>: <span class="yv">"100m"</span>
+          <span class="yk">limits</span>:
+            <span class="yk">memory</span>: <span class="yv">"128Mi"</span>
+            <span class="yk">cpu</span>: <span class="yv">"200m"</span>
+        <span class="yk">livenessProbe</span>:
+          <span class="yk">httpGet</span>:
+            <span class="yk">path</span>: <span class="yv">/health</span>
+            <span class="yk">port</span>: <span class="num">5000</span>
+          <span class="yk">initialDelaySeconds</span>: <span class="num">10</span>
+        <span class="yk">readinessProbe</span>:
+          <span class="yk">httpGet</span>:
+            <span class="yk">path</span>: <span class="yv">/health</span>
+            <span class="yk">port</span>: <span class="num">5000</span>
+          <span class="yk">initialDelaySeconds</span>: <span class="num">5</span></pre></div>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre>kubectl apply -f deployment.yaml
+kubectl get pods
+kubectl describe pod &lt;pod-name&gt;
+kubectl logs &lt;pod-name&gt;</pre></div></div>
+<div class="sub"><h3>3.4 Services</h3>
+<div class="tw"><table><tr><th>Type</th><th>Access</th><th>Use Case</th></tr>
+<tr><td><strong>ClusterIP</strong></td><td>Internal only</td><td>Service-to-service</td></tr>
+<tr><td><strong>NodePort</strong></td><td>Node IP + port</td><td>Dev / testing</td></tr>
+<tr><td><strong>LoadBalancer</strong></td><td>Cloud LB</td><td>Production</td></tr>
+<tr><td><strong>ExternalName</strong></td><td>DNS alias</td><td>External services</td></tr>
+</table></div>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">apiVersion</span>: <span class="yv">v1</span>
+<span class="yk">kind</span>: <span class="yv">Service</span>
+<span class="yk">metadata</span>:
+  <span class="yk">name</span>: <span class="yv">task-api-service</span>
+<span class="yk">spec</span>:
+  <span class="yk">selector</span>:
+    <span class="yk">app</span>: <span class="yv">task-api</span>     <span class="yc"># routes to pods with this label</span>
+  <span class="yk">ports</span>:
+  - <span class="yk">port</span>: <span class="num">80</span>           <span class="yc"># service port</span>
+    <span class="yk">targetPort</span>: <span class="num">5000</span>   <span class="yc"># pod port</span>
+  <span class="yk">type</span>: <span class="yv">ClusterIP</span></pre></div></div>
+<div class="sub"><h3>3.5 ConfigMap &amp; Secret</h3>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">apiVersion</span>: <span class="yv">v1</span>
+<span class="yk">kind</span>: <span class="yv">ConfigMap</span>
+<span class="yk">metadata</span>:
+  <span class="yk">name</span>: <span class="yv">task-api-config</span>
+<span class="yk">data</span>:
+  <span class="yk">FLASK_ENV</span>: <span class="yv">"production"</span>
+  <span class="yk">LOG_LEVEL</span>: <span class="yv">"INFO"</span>
+---
+<span class="yk">apiVersion</span>: <span class="yv">v1</span>
+<span class="yk">kind</span>: <span class="yv">Secret</span>
+<span class="yk">metadata</span>:
+  <span class="yk">name</span>: <span class="yv">task-api-secret</span>
+<span class="yk">type</span>: <span class="yv">Opaque</span>
+<span class="yk">data</span>:
+  <span class="yk">SECRET_KEY</span>: <span class="yv">bXlzZWNyZXRrZXkxMjM=</span>  <span class="yc"># echo -n "value" | base64</span></pre></div>
+<div class="cw"><div class="ch"><span class="cl yml">yaml — use in deployment</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">envFrom</span>:
+- <span class="yk">configMapRef</span>:
+    <span class="yk">name</span>: <span class="yv">task-api-config</span>
+<span class="yk">env</span>:
+- <span class="yk">name</span>: <span class="yv">SECRET_KEY</span>
+  <span class="yk">valueFrom</span>:
+    <span class="yk">secretKeyRef</span>:
+      <span class="yk">name</span>: <span class="yv">task-api-secret</span>
+      <span class="yk">key</span>: <span class="yv">SECRET_KEY</span></pre></div></div>
+<div class="sub"><h3>3.6 Essential kubectl Commands</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># View</span>
+kubectl get all                       <span class="cm"># everything in namespace</span>
+kubectl get pods -w                   <span class="cm"># watch live</span>
+kubectl get pods -o wide              <span class="cm"># show node info</span>
+
+<span class="cm"># Debug</span>
+kubectl describe pod &lt;name&gt;
+kubectl logs &lt;pod&gt; --previous         <span class="cm"># crashed container logs</span>
+kubectl exec -it &lt;pod&gt; -- bash
+kubectl port-forward &lt;pod&gt; 8080:5000
+
+<span class="cm"># Scale &amp; Rollout</span>
+kubectl scale deployment task-api --replicas=5
+kubectl set image deployment/task-api task-api=user/task-api:v2
+kubectl rollout status deployment/task-api
+kubectl rollout undo deployment/task-api    <span class="cm"># rollback!</span></pre></div></div>
+<div class="fnav"><button class="nbtn" onclick="show(2)">← Module 2</button><button class="nbtn prim" onclick="show(4)">Module 4: Advanced →</button></div>
+</div>
+
+<!-- S4 K8S ADVANCED -->
+<div class="sec" id="s4">
+<div class="sh"><span class="snum">MODULE 04</span><div><h2>Kubernetes Advanced <small>⚡ HPA · Ingress · StatefulSets · RBAC · Rolling Updates · 1.5 hrs</small></h2></div></div>
+<div class="sub"><h3>4.1 Namespaces</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre>kubectl create namespace dev
+kubectl create namespace staging
+kubectl create namespace production
+kubectl apply -f deployment.yaml -n production
+kubectl get pods --all-namespaces</pre></div></div>
+<div class="sub"><h3>4.2 Ingress</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre>minikube addons enable ingress</pre></div>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">apiVersion</span>: <span class="yv">networking.k8s.io/v1</span>
+<span class="yk">kind</span>: <span class="yv">Ingress</span>
+<span class="yk">metadata</span>:
+  <span class="yk">name</span>: <span class="yv">task-manager-ingress</span>
+  <span class="yk">annotations</span>:
+    <span class="yk">nginx.ingress.kubernetes.io/rewrite-target</span>: <span class="yv">/</span>
+<span class="yk">spec</span>:
+  <span class="yk">rules</span>:
+  - <span class="yk">host</span>: <span class="yv">taskmanager.local</span>
+    <span class="yk">http</span>:
+      <span class="yk">paths</span>:
+      - <span class="yk">path</span>: <span class="yv">/api</span>
+        <span class="yk">pathType</span>: <span class="yv">Prefix</span>
+        <span class="yk">backend</span>:
+          <span class="yk">service</span>:
+            <span class="yk">name</span>: <span class="yv">task-api-service</span>
+            <span class="yk">port</span>:
+              <span class="yk">number</span>: <span class="num">80</span></pre></div></div>
+<div class="sub"><h3>4.3 Horizontal Pod Autoscaler</h3>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">apiVersion</span>: <span class="yv">autoscaling/v2</span>
+<span class="yk">kind</span>: <span class="yv">HorizontalPodAutoscaler</span>
+<span class="yk">metadata</span>:
+  <span class="yk">name</span>: <span class="yv">task-api-hpa</span>
+<span class="yk">spec</span>:
+  <span class="yk">scaleTargetRef</span>:
+    <span class="yk">apiVersion</span>: <span class="yv">apps/v1</span>
+    <span class="yk">kind</span>: <span class="yv">Deployment</span>
+    <span class="yk">name</span>: <span class="yv">task-api</span>
+  <span class="yk">minReplicas</span>: <span class="num">2</span>
+  <span class="yk">maxReplicas</span>: <span class="num">10</span>
+  <span class="yk">metrics</span>:
+  - <span class="yk">type</span>: <span class="yv">Resource</span>
+    <span class="yk">resource</span>:
+      <span class="yk">name</span>: <span class="yv">cpu</span>
+      <span class="yk">target</span>:
+        <span class="yk">type</span>: <span class="yv">Utilization</span>
+        <span class="yk">averageUtilization</span>: <span class="num">70</span></pre></div>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre>minikube addons enable metrics-server
+kubectl apply -f hpa.yaml
+kubectl get hpa
+kubectl top pods</pre></div></div>
+<div class="sub"><h3>4.4 StatefulSet for Redis</h3>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">apiVersion</span>: <span class="yv">apps/v1</span>
+<span class="yk">kind</span>: <span class="yv">StatefulSet</span>
+<span class="yk">metadata</span>:
+  <span class="yk">name</span>: <span class="yv">redis</span>
+<span class="yk">spec</span>:
+  <span class="yk">serviceName</span>: <span class="yv">redis-service</span>
+  <span class="yk">replicas</span>: <span class="num">1</span>
+  <span class="yk">selector</span>:
+    <span class="yk">matchLabels</span>:
+      <span class="yk">app</span>: <span class="yv">redis</span>
+  <span class="yk">template</span>:
+    <span class="yk">metadata</span>:
+      <span class="yk">labels</span>:
+        <span class="yk">app</span>: <span class="yv">redis</span>
+    <span class="yk">spec</span>:
+      <span class="yk">containers</span>:
+      - <span class="yk">name</span>: <span class="yv">redis</span>
+        <span class="yk">image</span>: <span class="yv">redis:7-alpine</span>
+        <span class="yk">command</span>: [<span class="yv">"redis-server"</span>, <span class="yv">"--appendonly"</span>, <span class="yv">"yes"</span>]
+        <span class="yk">volumeMounts</span>:
+        - <span class="yk">name</span>: <span class="yv">redis-data</span>
+          <span class="yk">mountPath</span>: <span class="yv">/data</span>
+  <span class="yk">volumeClaimTemplates</span>:   <span class="yc"># auto PVC per pod</span>
+  - <span class="yk">metadata</span>:
+      <span class="yk">name</span>: <span class="yv">redis-data</span>
+    <span class="yk">spec</span>:
+      <span class="yk">accessModes</span>: [<span class="yv">"ReadWriteOnce"</span>]
+      <span class="yk">resources</span>:
+        <span class="yk">requests</span>:
+          <span class="yk">storage</span>: <span class="yv">1Gi</span></pre></div></div>
+<div class="sub"><h3>4.5 Rolling Updates &amp; RBAC</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># Trigger rolling update — zero downtime</span>
+kubectl set image deployment/task-api task-api=user/task-api:v2
+kubectl rollout status deployment/task-api
+kubectl rollout history deployment/task-api
+kubectl rollout undo deployment/task-api      <span class="cm"># rollback!</span></pre></div>
+<h4>RBAC Role</h4>
+<div class="cw"><div class="ch"><span class="cl yml">yaml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">apiVersion</span>: <span class="yv">rbac.authorization.k8s.io/v1</span>
+<span class="yk">kind</span>: <span class="yv">Role</span>
+<span class="yk">metadata</span>:
+  <span class="yk">name</span>: <span class="yv">pod-reader</span>
+  <span class="yk">namespace</span>: <span class="yv">production</span>
+<span class="yk">rules</span>:
+- <span class="yk">apiGroups</span>: [<span class="yv">""</span>]
+  <span class="yk">resources</span>: [<span class="yv">"pods"</span>, <span class="yv">"pods/log"</span>]
+  <span class="yk">verbs</span>: [<span class="yv">"get"</span>, <span class="yv">"list"</span>, <span class="yv">"watch"</span>]</pre></div></div>
+<div class="fnav"><button class="nbtn" onclick="show(3)">← Module 3</button><button class="nbtn prim" onclick="show(5)">Module 5: Project →</button></div>
+</div>
+
+<!-- S5 INDUSTRY PROJECT -->
+<div class="sec" id="s5">
+<div class="sh"><span class="snum">MODULE 05</span><div><h2>Industry Project + Debugging <small>🏭 Full deploy · CI/CD · 5 Debug Scenarios · 1 hr</small></h2></div></div>
+<div class="sub"><h3>5.1 Deploy the Full Project</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre>kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/secret.yaml
+kubectl apply -f k8s/redis/
+kubectl apply -f k8s/api/
+kubectl apply -f k8s/worker/
+kubectl apply -f k8s/ingress.yaml
+
+<span class="cm"># Watch everything come up</span>
+kubectl get all -n taskapp -w</pre></div></div>
+<div class="sub"><h3>5.2 CI/CD with GitHub Actions</h3>
+<div class="cw"><div class="ch"><span class="cl yml">yaml — .github/workflows/deploy.yml</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="yk">name</span>: <span class="yv">Build &amp; Deploy</span>
+<span class="yk">on</span>:
+  <span class="yk">push</span>:
+    <span class="yk">branches</span>: [<span class="yv">main</span>]
+
+<span class="yk">jobs</span>:
+  <span class="yk">deploy</span>:
+    <span class="yk">runs-on</span>: <span class="yv">ubuntu-latest</span>
+    <span class="yk">steps</span>:
+    - <span class="yk">uses</span>: <span class="yv">actions/checkout@v3</span>
+
+    - <span class="yk">name</span>: <span class="yv">Docker Login</span>
+      <span class="yk">uses</span>: <span class="yv">docker/login-action@v2</span>
+      <span class="yk">with</span>:
+        <span class="yk">username</span>: <span class="yv">${{ secrets.DOCKER_USERNAME }}</span>
+        <span class="yk">password</span>: <span class="yv">${{ secrets.DOCKER_TOKEN }}</span>
+
+    - <span class="yk">name</span>: <span class="yv">Build &amp; Push</span>
+      <span class="yk">uses</span>: <span class="yv">docker/build-push-action@v4</span>
+      <span class="yk">with</span>:
+        <span class="yk">context</span>: <span class="yv">./api</span>
+        <span class="yk">push</span>: <span class="yv">true</span>
+        <span class="yk">tags</span>: <span class="yv">${{ secrets.DOCKER_USERNAME }}/task-api:${{ github.sha }}</span>
+
+    - <span class="yk">name</span>: <span class="yv">Deploy to K8s</span>
+      <span class="yk">run</span>: |
+        kubectl set image deployment/task-api \
+          task-api=${{ secrets.DOCKER_USERNAME }}/task-api:${{ github.sha }} \
+          -n taskapp</pre></div></div>
+<div class="sub"><h3>5.3 🐛 Debugging Guide</h3>
+
+<div class="pc">
+  <div class="ph"><span class="ps sp">Pending</span><span class="pt">Problem 1: Pod stuck in Pending</span></div>
+  <div class="pb">
+    <div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+    <pre>kubectl describe pod &lt;pod&gt; -n taskapp
+<span class="cm"># Read "Events:" section — will show the reason</span>
+
+kubectl get events -n taskapp --sort-by='.lastTimestamp'
+kubectl describe node minikube       <span class="cm"># check free resources</span>
+kubectl get pvc -n taskapp           <span class="cm"># check if PVC is Bound</span></pre></div>
+    <p><strong>Common causes:</strong> Insufficient CPU/memory → reduce resource requests. PVC not bound. No schedulable nodes.</p>
+  </div>
+</div>
+
+<div class="pc">
+  <div class="ph"><span class="ps sc">CrashLoopBackOff</span><span class="pt">Problem 2: Pod keeps crashing</span></div>
+  <div class="pb">
+    <div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+    <pre>kubectl logs &lt;pod&gt; -n taskapp --previous  <span class="cm"># crashed container logs ← key!</span>
+kubectl describe pod &lt;pod&gt; -n taskapp
+
+<span class="cm"># Exit codes:</span>
+<span class="cm">#   1   = app error (check Python traceback in logs)</span>
+<span class="cm">#   137 = OOMKilled → increase memory limits</span>
+<span class="cm">#   143 = SIGTERM (graceful shutdown)</span>
+
+kubectl edit deployment task-api -n taskapp
+<span class="cm"># Increase limits.memory: 128Mi → 256Mi for OOMKilled</span></pre></div>
+  </div>
+</div>
+
+<div class="pc">
+  <div class="ph"><span class="ps ss">Service Error</span><span class="pt">Problem 3: Service not reachable</span></div>
+  <div class="pb">
+    <div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+    <pre><span class="cm"># Endpoints MUST show pod IPs — empty = label mismatch!</span>
+kubectl get endpoints task-api-service -n taskapp
+kubectl get pods -n taskapp --show-labels
+
+<span class="cm"># Test from inside cluster</span>
+kubectl run test --image=busybox -it --rm -- \
+  wget -qO- http://task-api-service.taskapp.svc.cluster.local/health</pre></div>
+    <p><strong>Fix:</strong> Ensure <code>spec.template.metadata.labels.app</code> in Deployment matches <code>spec.selector.app</code> in Service.</p>
+  </div>
+</div>
+
+<div class="pc">
+  <div class="ph"><span class="ps si">ImagePullBackOff</span><span class="pt">Problem 4: Cannot pull image</span></div>
+  <div class="pb">
+    <div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+    <pre>kubectl describe pod &lt;pod&gt; -n taskapp
+<span class="cm"># Events will show: Failed to pull image...</span>
+
+<span class="cm"># Fix: create registry secret</span>
+kubectl create secret docker-registry regcred \
+  --docker-username=USER --docker-password=PASS \
+  --docker-email=EMAIL -n taskapp
+
+<span class="cm"># Add to deployment spec.template.spec:</span>
+<span class="cm"># imagePullSecrets:</span>
+<span class="cm"># - name: regcred</span></pre></div>
+  </div>
+</div>
+
+<div class="pc">
+  <div class="ph"><span class="ps sr">Readiness Failed</span><span class="pt">Problem 5: Pod not receiving traffic</span></div>
+  <div class="pb">
+    <div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+    <pre>kubectl describe pod &lt;pod&gt; -n taskapp
+<span class="cm"># Look for: Readiness probe failed</span>
+
+<span class="cm"># Test the probe endpoint directly</span>
+kubectl exec -it &lt;pod&gt; -n taskapp -- curl localhost:5000/health
+
+<span class="cm"># Fix: increase initialDelaySeconds, or fix /health endpoint</span></pre></div>
+  </div>
+</div>
+</div>
+
+<div class="sub"><h3>5.4 Debugging Toolkit</h3>
+<div class="cw"><div class="ch"><span class="cl bash">bash</span><button class="cpbtn" onclick="cp(this)">copy</button></div>
+<pre><span class="cm"># Full health check</span>
+kubectl get all -n taskapp
+kubectl get events -n taskapp --sort-by='.lastTimestamp' | tail -20
+kubectl top pods -n taskapp
+
+<span class="cm"># Network debug pod (curl, nslookup, ping, traceroute)</span>
+kubectl run netdebug --image=nicolaka/netshoot -it --rm -n taskapp -- bash
+
+<span class="cm"># DNS check from inside cluster</span>
+kubectl exec -it &lt;pod&gt; -n taskapp -- \
+  nslookup redis-service.taskapp.svc.cluster.local
+
+<span class="cm"># Force pod restart</span>
+kubectl rollout restart deployment/task-api -n taskapp</pre></div></div>
+
+<div class="sub"><h3>5.5 Production Checklist</h3>
+<ul class="cl2">
+  <li><span class="ck">✅</span><span><strong>Specific image tags</strong> — never :latest in production</span></li>
+  <li><span class="ck">✅</span><span><strong>.dockerignore</strong> in every project</span></li>
+  <li><span class="ck">✅</span><span><strong>Non-root USER</strong> in Dockerfile</span></li>
+  <li><span class="ck">✅</span><span><strong>Multi-stage builds</strong> for lean images</span></li>
+  <li><span class="ck">✅</span><span><strong>Resource requests AND limits</strong> on every container</span></li>
+  <li><span class="ck">✅</span><span><strong>Liveness + Readiness probes</strong> on all pods</span></li>
+  <li><span class="ck">✅</span><span><strong>Rolling update strategy</strong> configured</span></li>
+  <li><span class="ck">✅</span><span><strong>HPA</strong> for variable workloads</span></li>
+  <li><span class="ck">✅</span><span><strong>Secrets via K8s Secret objects</strong>, not ConfigMap</span></li>
+  <li><span class="ck">✅</span><span><strong>RBAC</strong> — least privilege principle</span></li>
+  <li><span class="ck">✅</span><span><strong>Namespace per environment</strong> (dev/staging/prod)</span></li>
+  <li><span class="ck">✅</span><span><strong>Image tagged with git SHA</strong> in CI/CD, not :latest</span></li>
+  <li><span class="ck">✅</span><span><strong>Automated rollback</strong> on failed deployments</span></li>
+</ul></div>
+
+<div class="sub"><h3>5.6 Quick Reference Card</h3>
+<div class="qg">
+  <div class="qc"><div class="qt"><span class="dt">🐳</span> Docker Commands</div><div class="qb"><pre>docker build -t name:tag .
+docker run -d -p host:ctr name:tag
+docker compose up -d
+docker compose logs -f svc
+docker exec -it ctr bash
+docker system prune
+docker logs &lt;id&gt;</pre></div></div>
+  <div class="qc"><div class="qt"><span class="kt">☸</span> kubectl Commands</div><div class="qb"><pre>kubectl apply -f file.yaml
+kubectl get all -n ns
+kubectl describe pod name -n ns
+kubectl logs pod --previous -n ns
+kubectl exec -it pod -n ns -- bash
+kubectl rollout restart deploy/name
+kubectl rollout undo deploy/name
+kubectl scale deploy name --replicas=5</pre></div></div>
+</div></div>
+
+<div class="call info" style="margin-top:28px"><span class="ci">🎓</span><div><strong>Course Complete!</strong> You can now containerize, orchestrate, debug, and deploy Python microservices at industry scale. Deploy your own project using this exact stack!</div></div>
+<div class="fnav"><button class="nbtn" onclick="show(4)">← Module 4</button><button class="nbtn prim" onclick="show(0)">↑ Back to Overview</button></div>
+</div>
+
+</div><!-- /content -->
+</main>
+<script>
+let cur=0;
+function show(n){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.mc').forEach(c=>c.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+  document.querySelectorAll('.ni')[n].classList.add('active');
+  if(n>=1&&n<=5) document.querySelectorAll('.mc')[n-1].classList.add('active');
+  cur=n;
+  document.getElementById('pf').style.width=(n===0?0:(n/5)*100)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=900) document.getElementById('sidebar').classList.remove('open');
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function cp(btn){
+  const text=btn.closest('.cw').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='copied!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='copy';btn.classList.remove('ok')},2000);
+  });
+}
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(e.key==='ArrowRight'&&cur<5) show(cur+1);
+  if(e.key==='ArrowLeft'&&cur>0) show(cur-1);
+});
+show(0);
+</script>
+</body>
+</html>

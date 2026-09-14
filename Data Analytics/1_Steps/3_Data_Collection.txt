@@ -1,0 +1,4 @@
+Identify and gather data from various sources that are relevant to your problem statement and key questions. 
+This might include internal transactional databases (SQL), web scraping, third-party REST APIs, or offline spreadsheets. Ensure the data is relevant, timely, and of sufficient granularity to support robust analysis.
+Document the source, ingestion frequency, and collection methodology for transparency and reproducibility. 
+It is essential to verify data governance policies, privacy regulations (e.g., GDPR, CCPA, PII masking), and ethical considerations at this stage to ensure complete compliance.

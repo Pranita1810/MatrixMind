@@ -1,0 +1,31 @@
+***** PYTHON I/O & CONNECTORS FUNDAMENTALS *****
+
+-- Overview --
+Python I/O (Input/Output) and connectors encompass the modules, libraries, and protocols
+used to interface Python applications with external data sources, storage layers, and services.
+
+-- Connector & Target Types --
+  1. Flat Files & Serialization: CSV, JSON, Parquet, Excel (.xlsx), Text, Avro, Feather, Pickle.
+  2. Relational & Analytical Databases (RDBMS/OLAP): PostgreSQL, MS SQL Server, MySQL, SQLite, ClickHouse, DuckDB.
+  3. NoSQL & Document Stores: MongoDB, Redis, Cassandra, DynamoDB.
+  4. Web & REST APIs: Requests, HTTPX, aiohttp (GET, POST, PUT, DELETE, PATCH).
+  5. Cloud Lakehouses & Warehouses: Snowflake, Databricks (Delta Lake), AWS S3, Google BigQuery.
+  6. Business Intelligence & Reporting: Power BI REST APIs, Tableau Server Client.
+
+-- Character Encodings & Serialization --
+Encoding is the computational process of converting human-readable characters into binary byte representations:
+  - ASCII: 7-bit encoding covering standard English letters and control codes (128 characters).
+  - UTF-8: Variable-length encoding (1 to 4 bytes per character); backward compatible with ASCII; standard for modern web and data.
+  - Latin-1 (ISO-8859-1): 1-byte encoding covering Western European languages.
+  - UTF-16: 2 or 4 bytes per character, commonly used in Windows native APIs.
+Pipeline Flow: Human Text ---> Encoding (e.g. UTF-8) ---> Raw Bytes ---> Decoding ---> Human Text
+
+-- File Format Comparison Matrix --
+
+| Format | Structure | Human-Readable | File Size | Speed (Read/Write) | Schema & Types Preserved |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **CSV** | Flat tabular rows & columns | Yes | Medium | Moderate | No (plain text, requires inference) |
+| **Excel (.xlsx)** | Multi-sheet tabular workbook | Yes | Large | Slow | Partial (basic spreadsheet types) |
+| **Plain Text (.txt)** | Unstructured / freeform | Yes | Small-Medium | Fast | No |
+| **Parquet** | Columnar, binary with dictionary encoding | No | Small (Snappy compressed) | Extremely Fast | Yes (strict type metadata & statistics) |
+| **JSON** | Hierarchical key-value pairs | Yes | Medium-Large | Moderate | Partial (strings, numbers, bools, null) |

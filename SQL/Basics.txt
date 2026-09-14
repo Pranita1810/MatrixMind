@@ -1,0 +1,42 @@
+***** SQL FUNDAMENTALS & ARCHITECTURE *****
+
+1. SQL SUB-LANGUAGES:
+   - DDL (Data Definition Language):
+     Defines and alters database structures and schemas.
+     Commands: CREATE, ALTER, DROP, TRUNCATE, RENAME
+   - DML (Data Manipulation Language):
+     Modifies data within database tables.
+     Commands: INSERT, UPDATE, DELETE, MERGE
+   - DQL (Data Query Language):
+     Retrieves and queries data from tables.
+     Commands: SELECT
+   - DCL (Data Control Language):
+     Manages permissions and access rights.
+     Commands: GRANT, REVOKE
+   - TCL (Transaction Control Language):
+     Manages transaction states and ACID consistency.
+     Commands: COMMIT, ROLLBACK, SAVEPOINT
+
+2. CONSTRAINTS:
+   - PRIMARY KEY: Uniquely identifies each row (unique + not null; 1 per table).
+   - FOREIGN KEY: Enforces referential integrity between tables.
+   - UNIQUE: Ensures all values in a column are distinct (allows single NULL).
+   - NOT NULL: Prohibits missing/null values in a column.
+   - CHECK: Validates that column values satisfy a boolean condition (e.g., age >= 18).
+   - DEFAULT: Supplies a default fallback value when none is explicitly inserted.
+
+3. SQL QUERY EXECUTION ORDER:
+   Understanding logical query processing order is critical for query optimization:
+   1. FROM & JOINs (Table identification and cross product filtering)
+   2. WHERE (Row-level filtering before grouping)
+   3. GROUP BY (Aggregation buckets)
+   4. HAVING (Aggregate-level filtering after grouping)
+   5. SELECT (Column projection and expressions)
+   6. DISTINCT (Duplicate elimination)
+   7. ORDER BY (Sorting results)
+   8. LIMIT / OFFSET / TOP (Pagination and row restriction)
+
+4. INDEXING:
+   - Clustered Index: Determines physical storage order of rows on disk (only 1 per table; usually the Primary Key).
+   - Non-Clustered Index: Separate B-Tree structure storing indexed columns and row pointers (multiple per table).
+   - Index Best Practices: Index high-cardinality columns frequently used in WHERE, JOIN, and ORDER BY clauses. Avoid over-indexing high-write OLTP tables.

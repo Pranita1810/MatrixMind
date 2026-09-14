@@ -1,0 +1,20 @@
+***** PYTHON FUNDAMENTALS *****
+
+Overview:
+Python is a high-level, dynamically typed, interpreted, and garbage-collected programming language created by Guido van Rossum and released in 1991. It is designed for general-purpose programming with an emphasis on code readability and clean syntax.
+
+Is Python Compiled or Interpreted?
+Python uses a hybrid execution model combining compilation and interpretation:
+- Source code is first compiled into intermediate bytecode (.pyc).
+- The bytecode is then interpreted and executed line by line by the Python Virtual Machine (PVM).
+
+Code Execution Pipeline:
+  1. Tokenization (Lexical Analysis): Source code is converted into a sequence of tokens.
+  2. Parsing (Syntactic Analysis): Tokens are validated against Python grammar and organized into an Abstract Syntax Tree (AST).
+  3. Bytecode Compilation: The AST is compiled into platform-independent Python bytecode instructions.
+  4. PVM Execution: The Python Virtual Machine (PVM) reads and executes the bytecode instructions via a runtime loop.
+
+Module Caching (`__pycache__`):
+When a Python module is imported, its compiled bytecode is cached in the `__pycache__/` directory with a `.pyc` extension (e.g., `module.cpython-311.pyc`). On subsequent executions, Python skips tokenization and compilation if the source file has not changed, significantly speeding up application startup.
+
+

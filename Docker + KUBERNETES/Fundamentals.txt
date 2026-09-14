@@ -1,0 +1,57 @@
+***** DOCKER & KUBERNETES FUNDAMENTALS *****
+
+==================================================
+PART 1: DOCKER CONTAINERIZATION
+==================================================
+
+1. VIRTUAL MACHINES VS. CONTAINERS
+   - Virtual Machines: Heavyweight; each VM packages a complete Guest OS on top of a hypervisor.
+   - Containers: Lightweight; share the host OS kernel and isolate user space using Linux Namespaces and Cgroups.
+
+2. CORE DOCKER CONCEPTS
+   - Image: An immutable, read-only template composed of layered filesystems (built from a Dockerfile).
+   - Container: A runnable instance of a Docker image.
+   - Registry: Repository for storing and distributing images (e.g., Docker Hub, AWS ECR, GitHub Container Registry).
+   - Volume: Persistent storage mechanism managed by Docker outside the container's writable layer.
+   - Bind Mount: Mapping an exact directory or file from the host filesystem directly into the container.
+
+3. KEY DOCKERFILE DIRECTIVES
+   - FROM: Base image (e.g., python:3.11-slim, ubuntu:22.04)
+   - WORKDIR: Sets the working directory inside the container
+   - COPY / ADD: Transfers files from host build context into the image
+   - RUN: Executes commands during image build time (installs packages, compiles assets)
+   - ENV: Defines environment variables available at build and runtime
+   - EXPOSE: Informs Docker that the container listens on specified network ports
+   - CMD: Default command executed when the container starts (can be overridden)
+   - ENTRYPOINT: Configures a container that will run as an executable
+
+4. DOCKER COMPOSE
+   - A tool for defining and running multi-container Docker applications via a declarative `docker-compose.yaml` file.
+   - Orchestrates networks, shared volumes, dependency order (`depends_on`), and environment variables.
+
+
+==================================================
+PART 2: KUBERNETES (K8s) CONTAINER ORCHESTRATION
+==================================================
+
+1. ARCHITECTURE
+   - Control Plane (Master Node):
+     * kube-apiserver: Entry point exposing the Kubernetes API.
+     * etcd: Highly available distributed key-value store for all cluster state and metadata.
+     * kube-scheduler: Assigns newly created Pods to healthy nodes based on resource constraints.
+     * kube-controller-manager: Runs controller loops (NodeController, DeploymentController, JobController).
+   - Worker Nodes:
+     * kubelet: Agent running on each node ensuring containers described in PodSpecs are running and healthy.
+     * kube-proxy: Manages network rules and packet forwarding for Kubernetes Services.
+     * Container Runtime: Software executing containers (containerd, CRI-O).
+
+2. CORE KUBERNETES OBJECTS
+   - Pod: The smallest deployable computing unit in K8s; encapsulates one or more co-located containers sharing network namespace and storage.
+   - ReplicaSet: Maintains a stable set of replica Pods running at any given time.
+   - Deployment: Declarative management of Pods and ReplicaSets; provides zero-downtime rolling updates and rollbacks.
+   - Service: Abstraction that defines a logical set of Pods and a consistent policy to access them:
+     * ClusterIP: Default; exposes Service on an internal cluster IP (internal only).
+     * NodePort: Exposes Service on each Node's IP at a static port (30000-32767).
+     * LoadBalancer: Provisions an external cloud load balancer (AWS NLB/ALB, GCP LB).
+   - Ingress: Manages external HTTP/HTTPS access to services, routing rules, SSL/TLS termination, and virtual hosting.
+   - ConfigMap & Secret: Injects non-confidential configuration data and encrypted secrets into Pods as environment variables or mounted files.

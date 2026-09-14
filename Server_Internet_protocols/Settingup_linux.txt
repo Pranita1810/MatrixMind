@@ -1,0 +1,59 @@
+==============================================
+REMOTE LINUX SERVER SETUP & TAILSCALE VPN
+==============================================
+
+Architecture Overview:
+----------------------
+[ Laptop / Client ]
+        ↓
+    (Internet)
+        ↓
+[ Tailscale Mesh VPN (ZeroTier / WireGuard) ]
+        ↓
+[ Ubuntu Server (Target Host) ]
+        ↓
+[ Services: SSH / RDP / VS Code Remote / Docker ]
+
+
+Step 1: Operating System Installation
+--------------------------------------
+1. Download Ubuntu Server LTS ISO image (e.g., Ubuntu 22.04 / 24.04 LTS).
+2. Create a bootable USB drive using Rufus (Windows) or BalenaEtcher.
+3. Insert USB into target machine, enter BIOS/UEFI boot menu, and select USB drive.
+4. Follow installation prompts:
+   - Configure timezone, language, and network interface.
+   - Allocate drive partition (caution: formatting the drive will erase existing OS/data).
+   - Set up primary administrative username, hostname, and strong password.
+   - Select "Install OpenSSH server" during the setup wizard.
+5. Reboot machine and remove USB drive.
+
+
+Step 2: Package Updates & Secure Mesh Networking
+------------------------------------------------
+1. Log in to the Ubuntu console.
+2. Update existing system packages:
+   `sudo apt update && sudo apt upgrade -y`
+
+3. Verify OpenSSH server is running:
+   `sudo systemctl status ssh`
+   (If not installed: `sudo apt install openssh-server -y && sudo systemctl enable --now ssh`)
+
+4. Install and configure Tailscale:
+   `curl -fsSL https://tailscale.com/install.sh | sh`
+   `sudo tailscale up`
+   - Authenticate the machine via the provided authorization URL.
+
+5. Obtain the node's Tailscale IPv4 address:
+   `tailscale ip -4`
+
+
+Step 3: Remote Access & Development Setup
+-----------------------------------------
+1. Install Tailscale on your client machine (laptop, tablet, or workstation) and log in to the same Tailscale account.
+2. Connect securely via SSH using the Tailscale IP:
+   `ssh username@<tailscale-ip>`
+3. Configure VS Code Remote - SSH extension:
+   - Host: ubuntu-server
+   - HostName: <tailscale-ip>
+   - User: <username>
+4. Deploy containerized workloads, databases, and development environments remotely with zero public port forwarding required.

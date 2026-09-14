@@ -1,0 +1,46 @@
+****** DATA STRUCTURES & ALGORITHMS (DSA) ******
+
+1. DEFINITION & PURPOSE:
+   - Data Structures: Organized formats for storing, accessing, and manipulating data efficiently (e.g., Arrays, Linked Lists, Hash Maps, Trees, Graphs).
+   - Algorithms: Step-by-step computational procedures and logic designed to solve specific problems or perform transformations.
+   - Purpose: Writing scalable, time-efficient, and memory-optimized code capable of handling large-scale workloads.
+
+2. ASYMPTOTIC NOTATION:
+   - Big-O (O): Mathematical upper bound representing the worst-case scenario.
+   - Big-Omega (Ω): Lower bound representing the best-case scenario.
+   - Big-Theta (Θ): Tight bound representing the average-case scenario.
+   In technical interviews and production design, worst-case Big-O notation is standard.
+
+3. COMMON TIME COMPLEXITIES:
+   - O(1) - Constant Time:
+     Execution time is independent of input size.
+     Example: Array indexing (`arr[0]`), Hash table lookup (`dict[key]`), push/pop on stack.
+   - O(log n) - Logarithmic Time:
+     Problem size is repeatedly halved at each step.
+     Example: Binary Search, searching in a balanced Binary Search Tree (AVL, Red-Black).
+   - O(n) - Linear Time:
+     Execution time scales directly in proportion to input size n.
+     Example: Single traversal loop `for item in arr:`, linear search.
+   - O(n log n) - Linearithmic Time:
+     Efficient divide-and-conquer sorting algorithms.
+     Example: Merge Sort, Quick Sort (average case), Heap Sort, Timsort.
+   - O(n^2) - Quadratic Time:
+     Nested loops over the input of size n.
+     Example: Nested loops `for i in range(n): for j in range(n):`, Bubble Sort, Insertion Sort.
+   - O(2^n) - Exponential Time:
+     Growth doubles with each additional input element.
+     Example: Recursive calculation of Fibonacci numbers, generating power sets.
+   - O(n!) - Factorial Time:
+     Permutations of n elements (e.g., Brute-force Traveling Salesperson).
+
+4. SPACE COMPLEXITY:
+   - Measures total memory allocated by an algorithm relative to input size:
+     * Auxiliary Space: Extra temporary space used by the algorithm (excluding input).
+     * Call Stack Space: Memory consumed by recursive call frames.
+
+5. GENERAL RULES FOR COMPLEXITY ANALYSIS:
+   1. Drop constant factors: O(2n + 5) simplifies to O(n).
+   2. Drop lower-order terms: O(n^2 + n + 100) simplifies to O(n^2).
+   3. Sequential loops add together: Loop(n) + Loop(m) = O(n + m).
+   4. Nested operations multiply: Loop(n) inside Loop(n) = O(n * n) = O(n^2).
+   5. Halving search space implies logarithms: Dividing search space by 2 each step = O(log n).

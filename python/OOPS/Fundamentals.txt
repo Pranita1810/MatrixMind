@@ -1,0 +1,43 @@
+***** OBJECT-ORIENTED PROGRAMMING (OOP) IN PYTHON *****
+
+-- Overview --
+Object-Oriented Programming (OOP) is a programming paradigm organized around "objects"
+(data structures containing fields/attributes) and "methods" (procedures that operate on that data).
+It enhances code reusability, modularity, maintainability, and enterprise architecture design.
+
+-- The 4 Core Pillars of OOP --
+  1. Abstraction:
+     Hiding complex internal implementation details and exposing only the necessary interface to the user.
+     Python implementation: `abc` module (`from abc import ABC, abstractmethod`).
+  2. Encapsulation:
+     Bundling data and methods that operate on that data into a single unit, and restricting direct access to internal state.
+     Python implementation: Public (`self.name`), Protected convention (`self._name`), and Private name-mangling (`self.__name`), along with `@property` getters and setters.
+  3. Inheritance:
+     Mechanism where a child/derived class inherits attributes and methods from a parent/base class, promoting code reuse.
+     Supports Single, Multiple, Multilevel, and Hierarchical inheritance. `super()` invokes parent methods.
+  4. Polymorphism:
+     The ability of different classes to respond to the same method call in ways specific to their type.
+     Examples: Method Overriding (child redefines parent method) and Duck Typing ("If it walks like a duck and quacks like a duck, it's a duck").
+
+-- Key Terminology & Mechanisms --
+  1. Class: A blueprint or template defining the attributes and behaviors that created objects will possess.
+  2. Object / Instance: A concrete runtime instantiation of a class (`obj = ClassName()`).
+  3. `__init__(self, ...)`: The instance initializer method invoked automatically after object creation to set initial state.
+  4. `self`: An explicit reference to the current instance of the class accessing attributes or methods.
+  5. `cls`: An explicit reference to the class itself, used inside `@classmethod`.
+  6. Method Types:
+     - Instance Method: Takes `self`; operates on specific instance state.
+     - Class Method (`@classmethod`): Takes `cls`; operates on class-level attributes.
+     - Static Method (`@staticmethod`): Does not take `self` or `cls`; acts as an isolated utility function scoped within the class.
+  7. Dunder (Magic) Methods:
+     - String representation: `__str__` (user-facing) and `__repr__` (debugging/developer representation).
+     - Lifecycle: `__new__` (object allocator), `__del__` (destructor called during garbage collection).
+     - Operator overloading: `__add__`, `__eq__`, `__len__`, `__getitem__`.
+
+
+
+
+
+
+
+

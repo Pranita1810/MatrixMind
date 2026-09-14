@@ -1,0 +1,12 @@
+Brainstorm a comprehensive list of questions that, when answered, will provide actionable insights for business decision-making. 
+These questions should bridge the gap between technical data and business strategy by focusing on "why" and "how" scenarios. 
+Ensure each question is directly tied back to the initial problem statement to maintain focus. 
+Prioritize these questions based on their potential impact on the business and the feasibility of answering them with available data.
+This list serves as a roadmap for the analysis phase.
+
+Key Analytical Questions (Cafe Sales Case Example):
+    1. Overall Impact: By what percentage did revenue and order volume drop compared to previous quarters and year-over-year?
+    2. Geographic Variance: Which geographic locations or individual stores experienced the steepest decline?
+    3. Product Performance: Did specific menu categories (e.g., beverages vs. bakery items) drive the sales drop?
+    4. Customer Behavior: Has Average Order Value (AOV) declined, or is the drop driven primarily by lower customer footfall/visit frequency?
+    5. Price Sensitivity: Were price revisions or discount promotions correlated with changes in demand elasticity?

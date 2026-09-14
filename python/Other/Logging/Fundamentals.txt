@@ -1,0 +1,21 @@
+***** PYTHON LOGGING FUNDAMENTALS *****
+
+-- Overview --
+Logging is the process of tracking, recording, and persisting runtime events, execution flows,
+diagnostic data, exceptions, and anomalies during application execution.
+Unlike temporary `print()` statements, standard logging provides severity thresholds, timestamps,
+thread identification, source module names, and persistent file writing.
+
+-- Log Severity Levels (Ascending Priority) --
+  1. DEBUG (10): Detailed diagnostic information for developers to troubleshoot issues.
+  2. INFO (20): Confirmation that events are progressing as expected (e.g., "Service started", "Loaded 100 rows").
+  3. WARNING (30): Indication of unexpected events or potential future problems (e.g., "Low disk space", "Deprecated API").
+  4. ERROR (40): A serious issue occurred; a specific software function failed to execute.
+  5. CRITICAL (50): A severe failure occurred; the program may be unable to continue running.
+
+-- Core Logging Architecture --
+  - Logger: Exposes the primary interface used by application code (`logger = logging.getLogger(__name__)`).
+  - Handler: Directs log records to destinations (e.g., `StreamHandler` for console, `FileHandler` for files, `RotatingFileHandler` for size limits).
+  - Formatter: Specifies the layout and format of final log entries (e.g., `"%(asctime)s [%(levelname)s] %(name)s: %(message)s"`).
+  - Filter: Provides fine-grained determination of which log records should be emitted.
+

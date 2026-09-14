@@ -1,0 +1,39 @@
+***** SYSTEM DESIGN FUNDAMENTALS *****
+
+1. ARCHITECTURAL SCALING
+   - Vertical Scaling (Scale-Up): Adding more compute (CPU, RAM, SSD) to an existing machine.
+     * Pros: Simple, no distributed system complexity.
+     * Cons: Hard hardware limit, single point of failure (SPOF), downtime for upgrades.
+   - Horizontal Scaling (Scale-Out): Adding more commodity machines/nodes to the cluster.
+     * Pros: Infinite theoretical ceiling, high fault tolerance, elastic scaling.
+     * Cons: Requires distributed architectures, load balancing, and network synchronization.
+
+2. LOAD BALANCING
+   - Distributes incoming client traffic across multiple healthy application servers.
+   - Layers: Layer 4 (Transport / TCP/UDP level) vs. Layer 7 (Application / HTTP/HTTPS level).
+   - Algorithms: Round Robin, Weighted Round Robin, Least Connections, IP Hash / Consistent Hashing.
+   - Health Checks: Periodic heartbeat pings to automatically remove dead nodes from routing pool.
+
+3. CACHING STRATEGIES
+   - High-speed in-memory key-value store (e.g., Redis, Memcached) to reduce database load and latency.
+   - Caching Patterns:
+     * Cache-Aside (Lazy Loading): App checks cache; on miss, reads from DB and writes to cache.
+     * Read-Through: App treats cache as main store; cache library queries DB on miss.
+     * Write-Through: Data written to cache and DB simultaneously.
+     * Write-Back (Write-Behind): Data written to cache first; persisted to DB asynchronously in batches.
+   - Eviction Policies: LRU (Least Recently Used), LFU (Least Frequently Used), FIFO, TTL (Time-To-Live).
+
+4. CAP THEOREM (PACELC)
+   - In a distributed data store experiencing a Network Partition (P), you must choose between:
+     * Consistency (C): Every read receives the most recent write or an error.
+     * Availability (A): Every non-failing node returns a non-error response, but not guaranteed to be latest.
+   - PACELC Extension: If there is a Partition (P), choose Availability (A) or Consistency (C); Else (E), choose Latency (L) or Consistency (C).
+
+5. DATABASE SCALING & PARTITIONING
+   - Replication: Master-Slave / Primary-Replica (writes go to primary; reads scaled across replicas).
+   - Sharding (Horizontal Partitioning): Splitting large tables across independent database nodes by a Shard Key (Hash-based, Range-based, or Directory-based).
+   - Normalization vs. Denormalization: OLTP systems normalize (reduce redundancy); OLAP systems denormalize (optimize analytical read speed).
+
+6. ASYNCHRONOUS PROCESSING & MESSAGE QUEUES
+   - Decouple synchronous user requests from heavy background processing using message brokers (Apache Kafka, RabbitMQ, AWS SQS).
+   - Characteristics: Backpressure management, event-driven architecture, at-least-once vs exactly-once delivery guarantees.

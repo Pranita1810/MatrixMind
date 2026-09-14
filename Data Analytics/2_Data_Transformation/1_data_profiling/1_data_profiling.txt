@@ -1,0 +1,9 @@
+-- DATA PROFILING & EXPLORATION FRAMEWORK --
+
+1. Business Context: What core problem or decision does this dataset support?
+2. Data Structure & Grain: What is the unit of observation (each row = transaction, user, log)?
+3. Column Schema: What does each field represent, and what is its expected data type?
+4. Data Integrity Audit: Are there missing values (NaN/nulls), duplicate primary keys, schema mismatches, or impossible/irrational values (e.g., negative prices, future birthdates)?
+5. Scale & Tooling Strategy: What is the volume and velocity of the data, and which processing engine (Pandas, Polars, PySpark, DuckDB, SQL) fits memory and performance requirements?
+6. Metric Identification: What are the primary Key Performance Indicators (KPIs) and target measures?
+7. Exploratory Hypotheses: What relationships, seasonal trends, and strategic insights can this data reveal?

@@ -1,0 +1,12 @@
+--- DATA CLEANING ---
+	Data Cleaning is the systematic process of identifying and correcting errors, missing values,
+	duplicates, and formatting inconsistencies in raw data to produce an accurate, reliable,
+	and analysis-ready dataset.
+
+-- Standard Workflow Steps --
+	1. Data Profiling & Audit: Inspect schema types, missing value percentages, and value ranges.
+	2. Deduplication: Identify and eliminate redundant or identical row entries.
+	3. Missing Value Imputation: Impute numerical missing values using mean/median/interpolation or mode for categorical features (or drop rows if threshold criteria met).
+	4. Inconsistency Resolution: Standardize categorical labeling (e.g., "M", "Male", "m" -> "Male") and strip whitespace.
+	5. Outlier Treatment: Detect anomalies via IQR or Z-score and treat via capping (Winsorization) or filtering.
+	6. Data Type & Format Standardization: Cast columns to proper types (e.g., string to datetime, numeric to float/int).

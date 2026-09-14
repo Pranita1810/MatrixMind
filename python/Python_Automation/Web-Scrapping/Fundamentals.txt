@@ -1,0 +1,25 @@
+***** WEB SCRAPING & AUTOMATION FUNDAMENTALS *****
+
+-- Overview --
+Web scraping is the automated technique of extracting structured and unstructured data
+from websites and web applications using software scripts, HTTP clients, and browser engines.
+
+-- Core Architecture & Methodology --
+  1. Static HTML Scraping (Fast / Lightweight):
+     - Tools: `requests`, `httpx`, `BeautifulSoup4`.
+     - Mechanism: Sends HTTP GET requests and parses server-rendered HTML DOM trees using CSS selectors and XPath.
+  2. Dynamic JavaScript Scraping (Client-Side Rendered / SPAs):
+     - Tools: `Selenium`, `Playwright`, `Puppeteer`.
+     - Mechanism: Spins up a headless Chromium/Firefox browser instance, executes JavaScript, waits for DOM hydration, and simulates user interactions (clicks, scrolling).
+
+-- Real-World Applications --
+  1. Price Monitoring & Dynamic Pricing: Tracking competitor e-commerce catalogs and inventory fluctuations.
+  2. Alternative Data & Financial Research: Aggregating earnings call transcripts, news sentiment, and retail signals.
+  3. Lead Generation & Market Intelligence: Gathering publicly listed contact directories and business listings.
+  4. API Supplementation: Extracting public data from services that do not provide official REST/GraphQL APIs.
+
+-- Ethical Scraping & Best Practices --
+  1. robots.txt Compliance: Inspect `https://target.com/robots.txt` for crawl-delay and disallowed paths.
+  2. Rate Limiting & Concurrency: Implement delays and exponential backoff to avoid overloading target web servers.
+  3. Header Hygiene: Provide realistic `User-Agent` and `Accept` headers to prevent false-positive blocking.
+  4. Legal & Privacy Considerations: Comply with terms of service, copyright, and avoid scraping Personally Identifiable Information (PII).

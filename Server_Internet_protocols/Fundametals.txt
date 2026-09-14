@@ -1,0 +1,36 @@
+--- TCP/IP MODEL ---
+Transmission Control Protocol / Internet Protocol
+- A layered networking framework that defines how data is packaged, addressed, transmitted, routed, and received over a network using standardized protocols.
+- Execution Flow:
+  1. Application sends a request (e.g., HTTP/HTTPS).
+  2. TCP breaks the data into discrete packets, manages sequence numbers, and guarantees reliable delivery (via three-way handshake and checksums).
+  3. IP assigns source and destination IP addresses to route packets across the internet.
+  4. The receiving server receives the packets, reassembles them in order, and delivers them to the application layer.
+
+--- PORTS & PROTOCOLS ---
+- Ports allow multiple applications and services on the same host to use the network simultaneously without collision.
+- The operating system uses the port number to route incoming network packets to the correct listening process.
+- Analogy:
+  - IP Address = Street / Building Address (identifies the specific machine on the network)
+  - Port Number = Apartment / Room Number (identifies the specific application or process)
+  - Protocol (TCP/UDP) = Mode of transportation / delivery rules (reliable courier vs. fast postcard)
+
+--- DNS (DOMAIN NAME SYSTEM) ---
+- DNS is the internet's phonebook, translating human-friendly domain names (e.g., google.com) into machine-readable IP addresses (e.g., 142.250.190.46).
+- When a user enters a URL, the browser queries DNS resolvers (browser cache -> OS resolver -> recursive resolver -> root/TLD/authoritative nameservers) to find the server's IP address.
+
+--- NAT (NETWORK ADDRESS TRANSLATION) ---
+- NAT enables multiple devices on a private local network (LAN) to share a single public IP address to communicate with the public internet, conserving IPv4 addresses and providing baseline security.
+- Execution Steps:
+  1. An internal device (e.g., 192.168.1.15) sends an outbound request to the router.
+  2. The NAT-enabled router replaces the device's private IP and source port with its own public IP and an assigned unique source port.
+  3. NAT records this mapping in the NAT translation table.
+  4. When the external server responds, NAT inspects the destination port, matches it in the translation table, and forwards the packet to the correct internal device.
+
+--- NAT PORT FORWARDING ---
+- Port Forwarding allows external internet traffic to access a specific service hosted inside a private local network.
+- The router is configured to redirect any incoming traffic on a specific public port (e.g., public_ip:8080) directly to a specified private device and internal port (e.g., 192.168.1.100:80).
+
+--- FIREWALL ---
+- A firewall is a network security system that monitors and controls incoming and outgoing network traffic based on predetermined security rules.
+- Acts as a perimeter barrier between a trusted internal network and untrusted external networks (filtering packets by IP, port, protocol, and stateful inspection).

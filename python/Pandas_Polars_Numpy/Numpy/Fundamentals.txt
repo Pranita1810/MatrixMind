@@ -1,0 +1,23 @@
+***** NUMPY (NUMERICAL PYTHON) FUNDAMENTALS *****
+
+-- Overview --
+NumPy is the fundamental package for scientific and numerical computing in Python.
+Implemented in C and Fortran, it provides high-performance multidimensional array objects (`ndarray`)
+and an extensive collection of vectorized mathematical routines.
+
+-- Why is NumPy Fast? --
+  1. Contiguous Memory Layout: Unlike standard Python lists (which store pointers to heterogeneous objects scattered in RAM), NumPy arrays store homogeneous data in contiguous blocks of memory, maximizing CPU L1/L2 cache locality.
+  2. Vectorized Operations (SIMD): Mathematical operations execute compiled C loops under the hood without Python interpreter overhead.
+  3. No Type Checking Overhead: Elements share uniform fixed data types (e.g., `np.int64`, `np.float32`), eliminating runtime type inspection.
+
+-- Core Data Structures --
+  - 1D Array: Vector (shape: `(n,)`)
+  - 2D Array: Matrix (shape: `(rows, cols)`)
+  - 3D+ Array: Tensor (shape: `(batch, rows, cols)`)
+
+-- Key Mechanisms --
+  - Vectorization: Operating on entire arrays element-wise without explicit Python `for` loops (e.g., `arr1 + arr2`).
+  - Broadcasting: Rules that allow NumPy to perform arithmetic operations on arrays with different shapes without copying data.
+  - Slicing & Views: Array slices return views rather than copies, saving memory and compute time unless explicitly copied via `.copy()`.
+
+  

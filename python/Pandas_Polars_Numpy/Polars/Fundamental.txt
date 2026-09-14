@@ -1,0 +1,24 @@
+***** POLARS FUNDAMENTALS *****
+
+-- Overview --
+Polars is a blazingly fast, multi-threaded DataFrame library written in Rust and built on the Apache Arrow columnar format.
+Designed from the ground up to handle large datasets efficiently on a single machine, it scales linearly across all available CPU cores.
+
+-- Why Polars is Exceptionally Fast --
+  1. Apache Arrow Memory Model: Zero-copy memory sharing, cache-conscious columnar layout, and missing data represented via bitmasks.
+  2. Multi-Threaded Engine: Written in Rust without a Global Interpreter Lock (GIL); operations are natively parallelized across all CPU cores.
+  3. Lazy Evaluation & Query Optimization (`LazyFrame`):
+     - Predicate Pushdown: Automatically pushes filters (`filter`) as early as possible to minimize scanned data.
+     - Projection Pushdown: Selects only the necessary columns from disk rather than reading the entire table.
+     - Common Subexpression Elimination: Optimizes redundant calculation graphs before execution via `.collect()`.
+  4. Immutable Data Structures: Ensures memory safety, predictable concurrency, and eliminates unexpected mutations.
+
+-- Eager vs. Lazy API --
+  - Eager (`pl.DataFrame`): Executes operations immediately line-by-line (similar to Pandas).
+  - Lazy (`pl.LazyFrame`): Builds an optimized execution plan (`pl.scan_csv(...)` or `df.lazy()`), deferred until `.collect()` is called.
+
+-- Expression Contexts --
+  - `select`: Apply expressions across columns (`df.select([pl.col("a").sum(), pl.col("b").mean()])`)
+  - `with_columns`: Create or overwrite columns while keeping existing ones.
+  - `filter`: Filter rows matching boolean conditions.
+  - `group_by`: Group by columns and aggregate within parallelized expressions.

@@ -1,0 +1,57 @@
+----- DATA ANALYTICS -----
+
+-- Definition --
+	Data analytics is the science and process of collecting, organizing, cleaning, transforming,
+	and analyzing raw data to uncover meaningful patterns, correlations, and actionable insights
+	that drive strategic business decision-making and sustainable growth.
+
+	-- What is the difference between Data Analytics and Data Science? --
+		- Data Analytics (DA) primarily examines historical and present data to identify trends, 
+		  diagnose root causes, build business dashboards, and optimize current operations.
+		- Data Science (DS) leverages advanced mathematics, statistical modeling, machine learning,
+		  and predictive algorithms to forecast future outcomes and automate decision systems.
+
+
+-- The 6-Step Analytics Lifecycle --
+	1. Defining the Problem Statement: Clarifying core business objectives and key performance indicators (KPIs).
+	2. Preparing Business Questions: Formulating targeted hypotheses and analytical questions.
+	3. Data Collection & Extraction: Sourcing data from relational databases, APIs, logs, web scraping, or third parties.
+	4. Data Transformation & Storage: Data profiling, cleaning, deduplication, schema normalization, and warehouse storage.
+	5. Dashboard & Report Building: Creating intuitive, interactive visualizations and executive scorecards.
+	6. Strategic Recommendations & Action: Translating findings into strategic roadmap decisions and tracking outcomes.
+
+
+-- Data Preparation Stages --
+	1. Data Profiling & Exploration: Understanding data shape, schema types, summary statistics, and cardinalities.
+	2. Data Cleaning: Handling nulls/missing values, duplicate removal, schema type casting, and standardizing text/dates.
+	3. Exploratory Data Analysis (EDA): Examining distributions, skewness, outliers (IQR / Z-score), and correlation matrices.
+	4. Feature Engineering: Normalization (MinMaxScaler), Standardization (StandardScaler), One-Hot/Label Encoding, and PCA.
+	5. AI Integration: Augmenting analysis with NLP/LLM summarization, anomaly detection, and automated categorization.
+	6. Data Wrangling: Table joins, merges, window aggregations, and pivot transformations.
+
+
+-- Tooling Ecosystem --
+	1. Data Extraction: REST APIs, Web Scraping (BeautifulSoup, Selenium), SQL Queries, CDC pipelines.
+	2. Data Storage: RDBMS (PostgreSQL, MS SQL Server, MySQL), NoSQL (MongoDB), Cloud Warehouses (Snowflake, BigQuery), Data Lakes.
+	3. Transformation & ETL: Python (Pandas, Polars, NumPy), dbt, SQL Stored Procedures, Apache Airflow, Databricks (PySpark).
+	4. Business Intelligence & Dashboards: Power BI, Tableau, Streamlit, Apache Superset, Metabase.
+	5. AI & Predictive Analytics: Scikit-Learn, PyTorch, Hugging Face, OpenAI / Anthropic APIs.
+
+
+-- Analytical Methodologies --
+	1. Descriptive Analytics: "What happened?" (Central tendency, summary statistics, KPIs, variance analysis).
+	2. Diagnostic Analytics: "Why did it happen?" (Root Cause Analysis [RCA], cohort drill-downs, cross-tabulations).
+	3. Time Series Analytics: "How does it change over time?" (Moving averages, trend decomposition, seasonality, growth rates).
+	4. Inferential Analytics: "Can we generalize from a sample?" (Hypothesis testing, Student's t-test, Chi-Square test, ANOVA, A/B testing, Confidence Intervals).
+	5. Predictive / Prescriptive Analytics: "What will happen next, and what should we do?" (Linear/Logistic Regression, Random Forests, Optimization algorithms).
+
+
+-- Core Technical Competencies --
+	1. Python (Pandas, Polars, NumPy, Matplotlib, Seaborn)
+	2. Advanced SQL (Complex Joins, CTEs, Window Functions, Index Tuning)
+	3. Business Intelligence (Power BI, Tableau, DAX, Data Modeling)
+	4. Big Data & Lakehouse (Databricks, Apache Spark, Delta Lake)
+	5. Modern Data Warehousing (Snowflake, Google BigQuery, ClickHouse)
+	6. DevOps & Infrastructure (Docker, Kubernetes, Linux CLI, Bash)
+	7. Workflow Orchestration (Apache Airflow)
+	8. Machine Learning & Statistical Inference
