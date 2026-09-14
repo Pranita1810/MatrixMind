@@ -6,50 +6,44 @@ It contains my study notes, experiments, Jupyter notebooks, projects, pipelines,
 
 ## 🗺️ What I'm Learning
 
-```text
-Data Engineering
-├── SQL & Data Modeling
-├── Airflow
-├── Databricks & Snowflake
-├── Pandas / Polars
-└── ETL & Data Warehousing
+## 🧠 Skills & Technologies
 
-Data Analytics & AI
-├── Analytics
-├── Mathematics & Statistics
-├── Machine Learning
-└── EDA
+### Skills
 
-Software & Systems
-├── Python & DSA
-├── System Design
-├── Networking & Servers
-├── Docker
-└── Kubernetes
+| # | Skill | Level |
+|---|---|---|
+| 01 | Python Programming | 🟢 Master |
+| 02 | SQL | 🟢 Master |
+| 03 | Data Analytics | 🟢 Master |
+| 04 | ETL / Data Pipelines | 🟢 Master |
+| 05 | DevOps | 🟡 Intermediate |
+| 06 | Mathematics & Statistics | 🟢 Master |
+| 07 | DSA | 🟡 Intermediate |
+| 08 | System Design | 🔴 Learning |
+| 09 | Cloud & Cybersecurity | 🔴 Learning |
+| 10 | AI / ML | 🟡 Intermediate |
+| 11 | Servers, Internet & Networking | 🔴 Learning |
+| 12 | Product Analytics | 🟡 Mid |
+| 13 | Data Modeling | 🟢 Master |
+| 14 | Automation | 🟡 Intermediate |
 
-Modern Data Stack
-├── DuckDB
-├── ClickHouse
-├── Kafka / Redpanda
-└── Vector Databases
-```
+### Tools & Technologies
+
+| # | Technology | Level |
+|---|---|---|
+| 01 | Power BI & Tableau | 🟢 Master |
+| 02 | RDBMS / DBMS / CDBMS | 🟢 Master |
+| 03 | Snowflake | 🟡 Intermediate |
+| 04 | Databricks | 🟡 Intermediate |
+| 05 | AWS | 🔴 Learning |
+| 06 | Google BigQuery | 🟡 Intermediate |
+| 07 | Linux | 🔴 Learning |
+| 08 | Spark / Kafka / Airflow | 🟢 Master |
+
+> **Progress is self-assessed and updated as I learn, build, and gain practical experience.**
 
 ## 📂 Topics
 
-| Area                     | What you'll find                                                 |
-| ------------------------ | ---------------------------------------------------------------- |
-| **Apache Airflow**       | DAGs, TaskFlow, orchestration and Docker deployment              |
-| **Data Analytics**       | Analytics lifecycle, data cleaning, profiling and EDA            |
-| **Databricks**           | PySpark, Delta Lake and Medallion Architecture                   |
-| **Docker + Kubernetes**  | Containers, Linux internals, K8s and deployments                 |
-| **Git & GitHub**         | Git internals, branching, rebasing and CI/CD                     |
-| **Math & Statistics**    | Statistics, probability, hypothesis testing and time series      |
-| **Machine Learning**     | ML algorithms, regularization, ensembles and evaluation          |
-| **New Tech Stack**       | DuckDB, ClickHouse, Kafka/Redpanda and Vector DBs                |
-| **Python & DSA**         | Python internals, OOP, DSA, FastAPI and ETL projects             |
-| **Servers & Networking** | TCP/IP, DNS, Linux servers, VPNs and networking                  |
-| **SQL**                  | SQL fundamentals, joins, CTEs, indexes and window functions      |
-| **System Design**        | Scaling, caching, load balancing, queues and distributed systems |
 
 ## 🚧 Still Building
 
