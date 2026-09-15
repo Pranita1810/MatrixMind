@@ -219,5 +219,11 @@ things are managed by authorization.
 5. API-Key             : aJKHjha4q354.adf
 
 
-
+https://api.example.com:8000/users/123?name=rahul
+│       │                │    │      │
+│       │                │    │      └── Query parameter
+│       │                │    └───────── Path / endpoint
+│       │                └────────────── Port
+│       └─────────────────────────────── Host/domain
+└─────────────────────────────────────── Protocol
 ########## NOTE : More concepts are explained in jupyter notebook and python files. ##########
