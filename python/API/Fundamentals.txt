@@ -18,4 +18,206 @@
 	3. Request & Response Schemas: Pydantic `BaseModel` classes defining expected request bodies and response models.
 	4. Path & Query Parameters: Type-hinted parameters validated automatically (e.g., `item_id: int`, `skip: int = 0`).
 	5. Middleware & CORS: Intercepting requests/responses for logging, security headers, and cross-origin resource sharing (`CORSMiddleware`).
-	6. Security & Auth: Integrated OAuth2 with Password hashing, Bearer JWT tokens, and API key verification.
+	6. Security & Auth: Integrated OAuth2 with Password hashing, Bearer JWT tokens, and API key verification.
+
+
+---- Types of API ----
+1. REST API : Uses HTTP + URLs + Json, this API is most modern web API which is used in most modern tech and applications.
+#### REST API ####
+Python App
+    │
+    │  HTTP Request
+    ▼
+   API
+    │
+    │  talks to
+    ▼
+Weather Server / Database
+    │
+    │  Response
+    ▼
+   API
+    │
+    ▼
+Python App
+
+
+
+2. SOAP API : XML-based, strict standard. This is used by enterprise/legacy systems 
+#### SOAP API ####
+Client
+  │
+  │ GetUser(101)
+  ↓
+SOAP Client
+  │
+  │ XML + SOAP Envelope
+  ↓
+HTTP
+  ↓
+Network
+  ↓
+SOAP Server
+  │
+  │ Parse XML + validate contract
+  ↓
+GetUser(101)
+  │
+  ↓
+Database
+  │
+  ↓
+SOAP XML Response
+  │
+  ↓
+HTTP → Network
+  │
+  ↓
+Client
+
+3. GraphQL  : In very simple terms GraphQL API is where the client can specify the shape of the data it wants. (getting extact what needed).
+#### GraphQL API ####
+Client
+  │
+  │ query { user(id:101) { name email } }
+  ↓
+GraphQL Request
+  │
+  ↓
+HTTP → Network
+  │
+  ↓
+GraphQL Server
+  │
+  │ parse + validate query
+  ↓
+Resolvers
+  │
+  ↓
+Database / APIs
+  │
+  ↓
+Requested data
+  │
+  ↓
+JSON → HTTP → Network
+  │
+  ↓
+Client
+
+4. gRPC API : This is extreamly fasat API for communication between backend services. It runs a function on server and return data. It is used by microservices to communicate with each other.
+#### gRPC API ####
+Client
+  │
+  │  xy(request)
+  ↓
+gRPC client
+  │
+  │  Protobuf serialization
+  ↓
+HTTP/2
+  ↓
+Network
+  ↓
+HTTP/2
+  ↓
+gRPC server
+  │
+  │  Protobuf deserialization
+  ↓
+xy(request)
+  │
+  ↓
+return data
+  │
+  ↓
+Protobuf → HTTP/2 → Network
+  ↓
+Client
+
+5. WebSocket API : WebSocket is a communication Protocol API style that creates one persistent connection between client and server allowing both side to send message at any time.
+                   Phone A can sends a message to phone B, the difference is phone B does not need to request again and again.
+Client
+  │
+  │  HTTP Upgrade Request
+  ↓
+WebSocket Server
+  │
+  │  101 Switching Protocols
+  ↓
+════════ WebSocket Connection ════════
+  │
+  │ ←────── Server → Client ───────
+  │          "BTC = $105,000"
+  │
+  │ ─────── Client → Server ───────→
+  │          "BUY BTC"
+  │
+  │ ←────── Server → Client ───────
+  │          "Order confirmed"
+  │
+  │ ←────── Server → Client ───────
+  │          "BTC = $105,100"
+  │
+  │       Connection stays open
+
+
+---- API OPERATIONS ----
+CRUD -> Create/Read/Update/delete
+GET - Get data 
+POST - Add data
+DELETE - Delete data
+PUT - Chnage existing data
+GET + Param - Get data by ID
+
+---- PARAMETERS ----
+Parameters referece to the data we send to server with request, it can be used by different objectives like get me this data GET "129.xx.xxx.xx/data/{ID}" or to change data using POST.
+Now there are different ways of sending data to server -> 
+1. Query Parameters : In URLs like "129.xx.xxx.xx/data/{ID}"
+2. path             : In URLs like "129.xx.xxx.xx/data/{ID}"
+3. Body             : We send JSON body for this specially for sensitive data.
+4. Headers          : Tell who you are like browser, user, API key
+{
+  "username": "johndoe",
+  "email": "johndoe@example.com",
+  "isAdmin": false,
+  "age": 30
+}
+
+---- STATUS CODES ----
+Code range	Meaning                     Examples
+1xx	        Informational               
+2xx	        ✅ Success                 200 OK | 201 Created | 204 No Content
+3xx	        🔀 Redirection             
+4xx	        ❌ Client/request problem  400 Bad Request | 401 Unauthorized | 404 Not Found | 429 Too Many Requests
+5xx	        💥 Server problem          502 Bad Gateway | 503 Service Unavailable
+
+200 → Success
+201 → Created
+204 → Success, no content
+
+400 → Bad request
+401 → Authentication problem
+403 → Permission problem
+404 → Resource not found
+429 → Too many requests
+
+500 → Server error
+502 → Bad gateway
+503 → Service unavailable
+
+
+---- AUTENTICATION USER & API ----
+Here there are mainly 2 concepts first is authentication and second is authorization, authentication means you tell who you are using ID & PASS
+on the other hand authorization means are you authorized? or do you have Permission to get this data? or look at this page? can you change data? these all 
+things are managed by authorization.
+- Methods :
+1. Username + Password : username  & Password in JSON
+2. Bearer Token        : Authorization: Bearer eyJhbGciOi...
+3. JWT                 : xxxxx.yyyyy.zzzzz
+4. OAuth2.0            : It's a framework like using users authorize access without sharing password.
+5. API-Key             : aJKHjha4q354.adf
+
+
+
+########## NOTE : More concepts are explained in jupyter notebook and python files. ##########
