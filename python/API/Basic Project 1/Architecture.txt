@@ -1,0 +1,54 @@
+This Project is going to be very simple. We will build an API on top of the
+SSMS. 
+
+Client --> API --> Server -> DataBase --> Respondse --> Server --> API --> Client
+
+-- OBJECTIVES --
+1. Build a RESTfull API.
+2. Allow CRUD operations for client.
+3. Integrate Async
+4. Use SSMS for db & ORM for connection.
+5. Use Authentication & Authorization
+6. Return correct status code and text.
+7. Use log
+
+-- CONCEPTS --
+01 → Database + SQLAlchemy
+02 → Client model
+03 → GET
+04 → POST
+05 → PUT/PATCH
+06 → DELETE
+07 → Correct HTTP status codes
+08 → Service/Repository structure
+09 → Async
+10 → Authentication
+11 → Authorization
+12 → Error handling + logging
+13 → Tests
+14 → Production deployment
+
+
+-- FILE STRUCTURE --
+Basic Project 1/
+│
+├── app/
+│   ├── main.py
+│   │
+│   ├── core/
+│   │   ├── object_mapper.py
+│   │   ├── security.py
+│   │
+│   ├── services/
+│   │   ├── client.py
+│   │   └── auth.py
+│
+├── Logs/
+│   ├── recorder.py
+│   └── logs.txt
+│
+├── .env
+├── dockerfile
+|── docker-compose.yaml
+├── requirements.txt
+└── README.md

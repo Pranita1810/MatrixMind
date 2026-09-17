@@ -1,0 +1,13 @@
+services:
+  api:
+    build: .
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Kolkata
+    restart: unless-stopped
+    volumes:
+      - ./Logs:/app/Logs
