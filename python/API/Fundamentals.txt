@@ -213,7 +213,7 @@ on the other hand authorization means are you authorized? or do you have Permiss
 things are managed by authorization.
 - Methods :
 1. Username + Password : username  & Password in JSON
-2. Bearer Token        : Authorization: Bearer eyJhbGciOi...
+2. Bearer Token        : Authorization: Bearer eyJhbGciOi... (*Bearer and JWT are same*)
 3. JWT                 : xxxxx.yyyyy.zzzzz
 4. OAuth2.0            : It's a framework like using users authorize access without sharing password.
 5. API-Key             : aJKHjha4q354.adf

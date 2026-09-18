@@ -1,0 +1,16 @@
+***** REDIS *****
+
+Concept : 
+ - Remote Dictionary Server is an in-memory database that stores data in RAM for very fast access. It is mainly used for caching and reducing the load on the main server or database.
+
+Real World ;
+ - Amazon & Flipkart use redis to cache product details, prices and user sessions, ensuring fast page loading.
+ - Netflix use redis for caching frequently accessed content data and managing real time user session.
+ - Facebook & Insta uses redis to handle real time notification, feeds and user acitivity for fast and responsive interatction.
+
+Working :
+ - Redis acts as a caching layer between database and client. When a client asks for data the API Gateway forward the request to redis.
+ 1. Request handling - The client request is routed through the API Gateway which first checks redis for the required data.
+ 2. Cache Hit - If the data is not found in redis, the request is forwarded to the main database.
+ 3. Cache Update - The data retrieved from the database is stored in redis for future requests.
+ 4. Response - The API Gatway sends the final response to the client using data from redis or the database.

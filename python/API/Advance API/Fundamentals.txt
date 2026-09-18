@@ -1,0 +1,104 @@
+****** ADVANCE API CONCEPTS ******
+
+1. CORS : Cross origin Resource Sharing is a browser security rule that controls 
+          whether a frontend from one origin can call your API on another origin.
+          Example. Reac : port 3000 and FastAPI port is 8000
+          FastAPI will not allow 3000 so here we use CORS using "allow_origins=['url']"
+
+
+2. Caching :  caching meaning storing copies of responses of HTTP requests to spped up the 
+              future requests. we store that data for limited time to not query data again and again.
+              Now here Caching isn't necessarily insie FastAPI it can be on different layers like "Client browser/ CDN or Proxy / Reverse Proxy / FastAPI / Database"
+              2 Types -
+              i) HTTP caching : sits on browser / CDN / Proxy server.
+              ii) APP caching : sits on FastAPI / Redis / Database.
+              3 main header before going forward these methods are used only for HTTP caching-
+              i) Cache-Control : Control cache behaviour <Cache-Control : max-age=60>
+              ii)ETag          : identifies a particular version of a response <ETag : "abc123">
+              iii)Last-Modified: Tell the client when the Resource was last changed <Last-Modified: Wed, 17 Sep 2026 10:00:00 GMT>
+              When to use what :
+              CDN = "Can I serve this closer to the user?"
+              Redis = "Can my application avoid doing this expensive work again?"
+              HTTP cache = "Can the client avoid asking me again?"  
+
+3. API Pagination : So, Client send request to api and api get data to client from server, here what if the data is too large? the data will load in memory and evetually at some point API/app/Server will crash 
+                    to avoid this problem we use API Pagination. Instead of loading full data at once we use Pagination like lazy loading & processing by stamping limits on data.
+                    Mainly there are 2 types of API Pagination :
+                    i) OffSet Pagination  : You tell API which page you want <request.get("https//192.168.8000/data/page=2&limit=10")> this means it will return ros 11 to 20 so under the hood SQL is running 
+                                            SELECT * FROM TABLE LIMIT 10 OFFSET 10 (here offset is skipping rows before 10)
+                    ii) Cursor Pagination : Here Instead of saying give me page 2 you say give me the records after this particular record using <request.get("https//192.168.8000/data/limit=10&crusor=105")>
+                                            meaning give me all 10 records after 105th record.
+
+
+4. Rate Limiting : Rate limiting is restricting how many requests a client can make within a certain period. For eg. 100 reques per min  -> if 101th reques under 60 sec --> 429 Code  (to maby requests).
+                   Rate limit can sit on CDN /API Gateway / Reverse Proxy / FastAPI Application / Redis.
+                    Use it when	Example
+                    i)  CDN	Protecting your public internet-facing API	Block excessive traffic before it reaches your infrastructure
+                    ii) API Gateway	You want centralized limits across many APIs/services	100 req/min per API key
+                    iii)Reverse Proxy	You want simple infrastructure-level protection	Nginx: limit requests per IP
+                    iv) FastAPI/application	Limit depends on business/user logic	Free user: 100/day, Premium: 10,000/day
+                    v)  Redis Usually the storage/state, not the visible limiting layer.
+                    Rate Limiting Algorithms : This is a logic to apply reate limiting.
+                    i)    Token bucket - Token refill overtime, each request consume tokens (like claud)
+                    ii)   Fixed window - Allow N number of requests in each fixed time window from a client.
+                    iii)  Sliding window - Count requests over the most recent time period
+                    iv)   Leaky bucket - Requests leave the queue at a controlled rate.
+
+
+5. Authentication : We already know about auth and how it work & it's methods like basic auth, API key. We will learn other methods in detail
+                    i)   Basic Auth : Compare static username and password with parameters given by user.
+                    ii)  API Key : Compare static cominination of charectars given by user.
+                    iii) JWT : Basically JWT is temp token that can expire which contains HEADER.PAYLOAD.SIGNATURE. It is nust an API key that expires. (learn refresh tokens & access tokens)
+                    iv)  OAuth 2.0 : It is a 3rd party logger. client wants to login my API ask 3rd party (google) is this user valid? --> if yes --> login.  
+
+6. Key Generation & Rotation :
+                - This term refrece to creation, distribution and replacing API Keys. In simple terms build a expireable API Key that does not contain any
+                  secrets like JWT and provide it to user and after expiration create new one and repeat the cycle.
+
+7. API Performance : 
+                    i)   Performance Metrics - This are tools to measure if the API is sufficient, scalable and optimized. Imortant KPI - Response Time | Latency | Failed Request rates 
+                                               Throuhgput | Aviablility.
+                    ii)  Caching Strategies  - Refere above topic.
+                    iii) Load Balancing      - Load Balancing is distribution of network traffic amoung  the avilable servers. Internet -> upcoming traffic -> Load balancer -> distirbute to differnt servers. 
+                                               Round Robin, Weighted round robin, leaset connections, IP hash are some Algorithms use to apply load balancing. (seperate topic for this)
+
+8. Load Balancing : Load balancing distirbute incoming traffic across multiple servers to ensure no single server become overwhelemed  and improving system performance.
+                    Types : i) Network Layer ii) Traffic distribution Algorithms. Most of the time we use traffic distribution algo.
+                    Algorithms : i)Round Robins - request 1 -> server 1 | request 2 -> server 2 | request 3 -> server 3 | Repeating
+                                 ii)Weighted Round Robin - This is useful when server have differnt CPU,RAM,MEMORY. Each server recieves traffic according to it's assigned weight.
+                                 iii)Least Connection - Next request goes to server which has least requsts.
+                                 iv) Weighted least connection - It combines number of active connections and server capacity by analyzing both it handle requests accordingly.
+                                 v) Random Load balancing - The load balancer radmomly chooses a backend server. I don't think so this is very good method of load balancing.
+                                 vi)Resource based balancing - Load balancer check resource CPU,RAM usge of each server and send request to least user.
+
+9. Synchronous vs Asynchronous APIs : 
+                    Synchronous API are APIs that wait until previous request to complete than only accpet new request where as Asynchronous means accepting new reuqst while processing the existing one.
+                    Problem statement : sync api can only process one request at a time, if db takes 5 sec to response it will raise performance problem for next 100 clients. In python we use 
+                    async and awit to setup Asynchronous system.
+                    i) Event Looping : An event loop is the manager that keeps chekcing which async tasks are ready to run and execute them without blocking whie other tasks are waiting for I/O.
+
+10. API Gateway : It is a front door of your backend system. Instead of clients directly talking many backend services, they talk to one gateway.
+                  Without API gateway :               
+                          Client                                                                  
+                    /       |       \
+                   /        |        \
+                  v         v         v
+             User API   Campaign API  Payment API
+                |           |             |
+                v           v             v
+            Database    Database      Payment DB                                           
+                Common responsibilities:
+                1. Routing
+                2. Authentication
+                3. Authorization
+                4. Rate limiting
+                5. Request/response transformation
+                6. TLS termination
+                7. Logging/monitoring
+                8. Caching
+                9. API versioning
+                10. Load balancing/integration with service discovery
+
+11. Batch Processing : It means collecting multiple pieces of work and processing them togather instead of processing each one immediately. For example 10k lines of data arrived instead of adding each line and hitting
+                       db it convert into batches and process at a time. Batch processing is a oppostite concept of real time processing.
+                       

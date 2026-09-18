@@ -1,0 +1,31 @@
+
+#### Problems I have faced while building this project ####
+
+1 . PROBLEM  -> Missing Primary Key
+    DETAILS  -> Here When I was mapping table, ORM was not able to map table because there was no unique value or Primary key in table.
+    SOLUTION -> Alter db table and add index column using auto increment.
+
+2 . PROBLEM  -> Repeating db connection for each operation
+    DETAILS  -> I was writing with Session(engine) as sesion for every db operation function.
+    SOLUTION -> Dependancy Injection, means we build a function that return connection and use that connection function inside Dependance(getseesion).
+
+3 . PROBLEM  -> Docker could not find Uvicorn
+    DETAILS  -> ASGI uvicorn was there in requirements.txt and also installed in docker after running docker container but after running docker threw message 
+                that says uvicorn not found.
+    SOLUTION -> Here insalling package and running are two differnt things. When we run pip install uvicorn it is installed in user path of local machine but
+                docker is a independent environment so when docker tries to find uvicorn it cannot find the module. FOr this main solution is instead of asking the shell to 
+                find a command called uvicorn you ask python itself to run the module using <python -m uvicorn app.main:app --host......>
+    
+4 . PROBLEM  -> ODBC driver issue
+    DETAILS  -> I built my project using FastAPI and SQL Server, to connect wil SQL Server we need a Driver so in local machine we can connect our service with SQL Server using 
+                ODBC driver 17 for sql server which is mcirosoft driver so here it won't run in docker because docker runs on linux environment.
+    SOLUTION -> Install linux Dependancies in the docker file 
+                RUN apt-get update \
+                && apt-get install -y curl gnupg unixodbc \
+                ...
+                && ACCEPT_EULA=Y apt-get install -y msodbcsql17
+
+5 . PROBLEM  -> Local host connection string won't work in docker
+    DETAILS  -> When I connect SQL server with my service I used localhost\SQLEXPRESS and Trusted_server = yes which works fine for local connection but  as we know docker 
+                is a independent linux environment. localhost means my machine not the docker environment so my service will try to establish connectin and will fail. 
+    SOLUTION -> Use SQL server Authentication and docker.internal, changed my connection string to  <DATABASE_URL="mssql+pyodbc://api_user:1234@host.docker.internal:1433/test?driver=ODBC+Driver+17+for+SQL+Server">
