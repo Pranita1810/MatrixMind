@@ -19,7 +19,26 @@
               When to use what :
               CDN = "Can I serve this closer to the user?"
               Redis = "Can my application avoid doing this expensive work again?"
-              HTTP cache = "Can the client avoid asking me again?"  
+              HTTP cache = "Can the client avoid asking me again?"
+
+                PROXY SERVER AND CDN WORKING FOR HTTP CACHING ::
+                1. User machine
+                - Browser sends request.
+                - Example: "Give me /B_cache."
+
+                2. Proxy machine or CDN Server
+                - Receives the request first.
+                - Nginx checks its cache.
+                - If data exists and is still valid → returns it immediately.
+                - If not → forwards request to production.
+
+                3. Production machine
+                - FastAPI receives the request.
+                - Queries the database.
+                - Returns data to Nginx.
+                - Nginx stores that response in its cache.
+                - Nginx sends response to the user.
+
 
 3. API Pagination : So, Client send request to api and api get data to client from server, here what if the data is too large? the data will load in memory and evetually at some point API/app/Server will crash 
                     to avoid this problem we use API Pagination. Instead of loading full data at once we use Pagination like lazy loading & processing by stamping limits on data.
@@ -101,4 +120,63 @@
 
 11. Batch Processing : It means collecting multiple pieces of work and processing them togather instead of processing each one immediately. For example 10k lines of data arrived instead of adding each line and hitting
                        db it convert into batches and process at a time. Batch processing is a oppostite concept of real time processing.
-                       
+
+12. JWT & OAuth2 (Implementation, not just theory) :
+                    JWT = HEADER.PAYLOAD.SIGNATURE, signed with a secret so server can verify it wasn't tampered with, without hitting DB every request.
+                    Access Token  : Short lived (mins), sent on every request in "Authorization: Bearer <token>".
+                    Refresh Token : Long lived (days), stored securely, used only to get a new access token when old one expires.
+                    Flow : Login -> server checks user+pass -> issues access+refresh token -> client uses access token -> when expired, client calls /refresh with refresh token -> new access token.
+                    OAuth2.0 in practice : "client_credentials" flow (service-to-service, no user) vs "authorization_code" flow (user logs in via 3rd party like Google).
+                    Libraries : python-jose / pyjwt for encode-decode, passlib/bcrypt for hashing passwords (never store plain password).
+
+13. API Testing :
+                    Unit test  : Test one function alone (e.g. verify_key()) with fake/mock data.
+                    Integration test : Test full endpoint using FastAPI's TestClient / httpx.AsyncClient (hits real route, fake/test DB).
+                    Test cases to always cover : happy path (200), missing/invalid auth (401/403), not found (404), bad body (422).
+                    Tool : pytest. Run tests automatically before every deploy so broken code never reaches prod.
+
+14. Client-Side API Consumption (calling someone else's API) :
+                    Library : requests (sync) or httpx (sync+async).
+                    Retry + Backoff : If a call fails (5xx/timeout) don't just fail -> retry after 1s, 2s, 4s... (exponential backoff), use "tenacity" library.
+                    Respect Rate Limits : Read response headers like "Retry-After" / "X-RateLimit-Remaining" and pause instead of hammering the API.
+                    Pagination as a caller : Keep looping "next page" or "next cursor" from response until API says no more data, collect into one list/dataframe.
+                    Auth as a caller : Get token once (login/OAuth2), cache it, refresh it before it expires, attach to every request header.
+
+15. Idempotency :
+                    Making an operation safe to repeat without side effects. Example : if client sends same POST twice (due to network retry) it should not create 2 records.
+                    Solution : Idempotency-Key header sent by client, server remembers which keys it already processed and returns same result again instead of duplicating.
+
+16. API Versioning (in practice) :
+                    URL versioning : /v1/data , /v2/data (most common, easy to see/debug).
+                    Header versioning : client sends "Accept: application/vnd.api.v2+json".
+                    Why : so you can change/break v2 without breaking old clients still using v1. Deprecate old version with a warning header before removing it.
+
+17. Database Migrations :
+                    Problem : Base.metadata.create_all() only creates tables, can't safely change an existing table (add column, rename etc.) once it has real data.
+                    Solution : Alembic - generates versioned migration scripts (upgrade/downgrade), tracks schema history like Git tracks code.
+
+18. CI/CD for APIs :
+                    CI (Continuous Integration) : On every push, auto run lint + tests (GitHub Actions/GitLab CI).
+                    CD (Continuous Deployment) : If tests pass, auto build Docker image and deploy to server.
+                    Goal : No manual "it works on my machine" deploys.
+
+19. Observability (beyond basic logging) :
+                    Logging   : What happened (already doing this with recorder_.py).
+                    Metrics   : Numbers over time - request count, error rate, latency (Prometheus, exposed via /metrics endpoint).
+                    Tracing   : Follow one request across multiple services (OpenTelemetry) - useful once you have more than 1 API talking to another.
+                    Error tracking : Tool like Sentry auto-captures exceptions with full context, alerts you.
+
+20. WebSocket / GraphQL / gRPC (writing real code, not just diagrams) :
+                    WebSocket : FastAPI has @app.websocket("/ws") - use for live/streaming data (price ticker, chat, notifications).
+                    GraphQL   : Library "strawberry-graphql" - client asks for exact fields it wants instead of fixed REST response shape.
+                    gRPC      : Library "grpcio" + a .proto file defines the contract - used for fast service-to-service calls (not browser-facing).
+
+21. Background Jobs / Message Queues :
+                    Problem : Some work (sending email, processing image, heavy calculation) shouldn't block the API response.
+                    Simple fix : FastAPI's built-in BackgroundTasks (runs after response is sent).
+                    Real fix (scale) : Celery or RQ + Redis/RabbitMQ as a queue - API just adds a "job", a separate worker process does the heavy lifting.
+
+22. Webhooks (receiving events instead of polling) :
+                    Instead of your app repeatedly asking "any new data?" (polling), the other service calls YOUR API endpoint the moment something happens (push, not pull).
+                    Example : Payment gateway hits your "/webhook/payment-success" endpoint the instant a payment completes.
+                    Security note : Always verify the webhook signature header to confirm it really came from the expected sender, not a random POST from anyone.

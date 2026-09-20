@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="getData()">Get Data</button>
+<p id="result"></p>
+
+<script>
+async function getData() {
+    try {
+        const response = await fetch("http://localhost:8000/B_cache");
+        const data = await response.json();
+
+        document.getElementById("result").innerText = "Data received";
+        console.log(data);
+    } catch (error) {
+        document.getElementById("result").innerText = error;
+        console.error(error);
+    }
+}
+</script>
+
+</body>
+</html>
