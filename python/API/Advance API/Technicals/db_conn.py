@@ -3,6 +3,7 @@ from sqlalchemy.orm  import Mapped, mapped_column, DeclarativeBase,Session
 from sqlalchemy import String,Integer,Float,Date,DateTime,create_engine
 import datetime as dt
 from sqlalchemy import select
+from pydantic import BaseModel
 
 
 class Base(DeclarativeBase):
@@ -26,4 +27,13 @@ def getsession():
     with Session(engine) as session:
         yield session
 
+
+
+class DataVal(BaseModel):
+    date : dt.date | None
+    datetime : dt.datetime | None
+    cash_type : str
+    card : str
+    money : float
+    coffee_name : str
 

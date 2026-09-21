@@ -69,7 +69,7 @@
                     ii)  API Key : Compare static cominination of charectars given by user.
                     iii) JWT : Basically JWT is temp token that can expire which contains HEADER.PAYLOAD.SIGNATURE. It is nust an API key that expires. (learn refresh tokens & access tokens)
                     iv)  OAuth 2.0 : It is a 3rd party logger. client wants to login my API ask 3rd party (google) is this user valid? --> if yes --> login.  
-
+                    v)   Session : user login --> browser keep cookie --> user send requests multiple times --> browser or server use that cookie so user does not need to login again. 
 6. Key Generation & Rotation :
                 - This term refrece to creation, distribution and replacing API Keys. In simple terms build a expireable API Key that does not contain any
                   secrets like JWT and provide it to user and after expiration create new one and repeat the cycle.
