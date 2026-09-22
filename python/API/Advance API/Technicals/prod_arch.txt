@@ -1,0 +1,225 @@
+1. Problem Statement : we have so many clients and lots of data to Response from db.
+Solution :
+Client
+  ↓
+Reverse Proxy / CDN
+  ↓
+API Gateway
+  ├── Authentication
+  ├── Rate Limiting
+  └── Routing
+  ↓
+Nginx Load Balancer
+  │
+  ├── FastAPI Server 1
+  ├── FastAPI Server 2
+  └── FastAPI Server 3
+           │
+           ↓
+      Shared Redis
+           │
+           ↓
+        Database
+           │
+      Pagination
+           ↓
+        Response
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+2. Problem Statement : An e-commerce company is launching a flash sale for popular product. we have 500k users hit api within few min
+                       only 10k units are aviable, users must not be able to use more than avilable stock, product details will recieve huge traffic,
+                       how to handle payment service, system shoud remain aviable if one API server fails.
+Solution :
+                                     ┌──────────────┐
+                         │    Client    │
+                         └──────┬───────┘
+                                ↓
+                    ┌─────────────────────┐
+                    │ CDN / Reverse Proxy │
+                    │  Cache + TLS        │
+                    └──────────┬──────────┘
+                               ↓
+                    ┌─────────────────────┐
+                    │    API Gateway      │
+                    │ Auth + Rate Limit   │
+                    └──────────┬──────────┘
+                               ↓
+                    ┌─────────────────────┐
+                    │  Load Balancer      │
+                    │ Least Connections   │
+                    └──────────┬──────────┘
+                               ↓
+              ┌─────────────────────────────────┐
+              │       FastAPI Servers           │
+              │ Server 1 | Server 2 | Server 3 │
+              └───────────────┬─────────────────┘
+                              ↓
+                    ┌─────────────────┐
+                    │      Redis      │
+                    │ Product Cache   │
+                    │ Stock Counter   │
+                    └────────┬────────┘
+                             ↓
+                      ┌─────────────┐
+                      │   Queue     │
+                      │   Kafka     │
+                      └──────┬──────┘
+                             ↓
+                 ┌──────────────────────┐
+                 │     Order Service    │
+                 └──────────┬───────────┘
+                            ↓
+                    ┌──────────────┐
+                    │  PostgreSQL  │
+                    │ Orders/Stock │
+                    └──────────────┘
+
+                            │
+                            ↓
+                    ┌──────────────┐
+                    │Payment Service│
+                    │   External    │
+                    └──────────────┘
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3. Problem statement : You are building a videio streaming backend. Millions of users can watch videos, videos are large, users are distributed globally\
+                       popular videos suddenly receive 100x than normal one. Need low latency for video delivery.
+                       
+                         ┌──────────┐
+                         │  Client  │
+                         └────┬─────┘
+                              ↓
+                     ┌────────────────┐
+                     │      CDN       │
+                     │ Video Cache    │
+                     └───────┬────────┘
+                             │
+                    Cache MISS│
+                             ↓
+                    ┌────────────────┐
+                    │ Object Storage │
+                    │ S3 / Blob      │
+                    └────────────────┘
+
+
+Client
+  │
+  │ Metadata / Login / Comments / Likes
+  ↓
+┌─────────────────────┐
+│ Reverse Proxy       │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│ API Gateway         │
+│ Auth + Rate Limit   │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│ Load Balancer       │
+└──────────┬──────────┘
+           ↓
+    ┌──────┼──────┐
+    ↓      ↓      ↓
+ API-1   API-2   API-3
+    │      │      │
+    └──────┼──────┘
+           ↓
+        Redis
+           ↓
+       Database
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4. Problem Statement : Build an API backend for a banking application. users can transfer money between accounts, 1000 of transaction can happen,
+                       a transfer must never deduct money twice, if what would you do if API crash during transfer, every transaction must be auditable
+                       strong database consistancy is required.
+                    CLIENT / MOBILE APP
+                           │
+                           ↓
+                 ┌──────────────────┐
+                 │ WAF / Reverse    │
+                 │ Proxy            │
+                 └────────┬─────────┘
+                          ↓
+                 ┌──────────────────┐
+                 │   API Gateway    │
+                 │ Auth + Rate Limit│
+                 └────────┬─────────┘
+                          ↓
+                 ┌──────────────────┐
+                 │ Load Balancer    │
+                 └────────┬─────────┘
+                          ↓
+              ┌───────────┼───────────┐
+              ↓           ↓           ↓
+           API-1       API-2       API-3
+              │           │           │
+              └───────────┼───────────┘
+                          ↓
+                 ┌──────────────────┐
+                 │ Transfer Service │
+                 └────────┬─────────┘
+                          ↓
+                 ┌──────────────────┐
+                 │ PostgreSQL /     │
+                 │ Banking DB       │
+                 └────────┬─────────┘
+                          │
+              ┌───────────┴───────────┐
+              ↓                       ↓
+        Transaction Ledger        Audit Log
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5. Problem Statement : Build a backend system for ride hailing system. Millions of drivers and riders, Drivers Continuously send their lication, rider requests a ride,
+                       system should find nearby aviable drivers, large number of location updation, a driver should not be assigned to two riders simultaneously.
+Solution  :
+
+                    CLIENT
+                 /          \
+                /            \
+        Rider App          Driver App
+             │                 │
+             ↓                 ↓
+       ┌──────────────────────────┐
+       │       API Gateway        │
+       │ Auth + Rate Limiting     │
+       └────────────┬─────────────┘
+                    ↓
+             Load Balancer
+                    ↓
+        ┌───────────┼───────────┐
+        ↓           ↓           ↓
+     API-1       API-2       API-3
+        │           │           │
+        └───────────┼───────────┘
+                    ↓
+          ┌───────────────────┐
+          │ Location Service  │
+          └─────────┬─────────┘
+                    ↓
+              Redis Cluster
+          (Driver locations)
+                    │
+                    ↓
+            Geospatial Search
+                    │
+                    ↓
+          ┌───────────────────┐
+          │ Matching Service  │
+          └─────────┬─────────┘
+                    ↓
+                Database
+                    │
+                    ↓
+              Message Queue
+                    │
+                    ↓
+          Notification Service
+                    │
+                    ↓
+                Driver App
