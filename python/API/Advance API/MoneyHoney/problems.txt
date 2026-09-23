@@ -1,0 +1,22 @@
+***** PROBLEMS I FACED ******
+
+1. How to connect ORM if there are multiple tables in database ?
+-  We use "sqlacodegen", which is an automatic model code generator for SQLAlchemy.
+   It is a command line tool written in python that reads structure of an existing db and create python 
+   class models. So you do not have to write n numbers of classes for n numbers of tables.
+   <sqlacodegen "mssql+pyodbc://yourid:password@localhost:1433/STOCK_DATA?driver=ODBC+Driver+17+for+SQL+Server" > app/db/models/generated_models.py>
+   use this command to generated_models.
+
+2. Architectural Issue
+-  Now here I'm building prod level API project for the first time & While creating new directories and helpers and folders
+   I was so confused, solution for this is Mentalmap + essentials. In this solution I only created folder and file when I needed, always build a final structure of project
+   as you keep buiding project, writing codes along with keep building structure so we can connect points and add detailed comments where it needed.
+
+3. We have 10GB OF DATA!!
+-  Ouu shii!! I cannot load entire data in browser if I try to browser may crash and it is not a very good practice to do. I found a solution for this 
+   __pagination__, __streaming__, __compression__.
+   Pagination : Adding offset or cursor method
+   Streaming  : Instead of loading 10M rows load 25k and so on.
+   Compression: Compress data to transfer fast.
+
+4. 
