@@ -5,8 +5,6 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 import secrets
 from dotenv import load_dotenv
-
-
 from pydantic import BaseModel
 
 
@@ -15,7 +13,12 @@ load_dotenv()
 SECRET = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
-auth = FastAPI()
+app = FastAPI(
+    title="MoneyHoney Data API",
+    description="High-performance financial market data endpoints",
+    version="1.0.0",
+    root_path="/mh/v1"
+            )
 basic_auth = HTTPBasic()
 
 
@@ -29,7 +32,7 @@ def create_access(username):
     payload = {
         "sub": username,
         "type" : "access",
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=5)
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=10)
     }
 
     return jwt.encode(
@@ -44,7 +47,7 @@ def create_refresh(username):
     payload = {
         "sub": username,
         "type": "refresh",
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=15)
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=60)
     }
 
     return jwt.encode(
@@ -55,7 +58,7 @@ def create_refresh(username):
 
 
 # ------------------ MAIN AUTH ------------------
-@auth.post("/login")
+@app.post("/login")
 def login(
     credentials : HTTPBasicCredentials = Depends(basic_auth)
 ):
@@ -77,7 +80,7 @@ def login(
     }
 
 
-@auth.post("/refresh")
+@app.post("/refresh")
 def refresh(data: RefreshTokenRequest):
     try:
         payload = jwt.decode(

@@ -3,18 +3,30 @@ from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 import os
 import pandas as pd
+from datetime import datetime 
+
 load_dotenv()
 
 
 # ------- CREATE MAIN ENGINE -------
 
-url = os.getenv("DATABASE_URL_LOCAL")
-engine = create_engine(url, pool_pre_ping=True)
+url_stock = os.getenv("DATABASE_URL_LOCAL")
+user_url = os.getenv("DATABASE_URL_USERS")
 
+def engine(url):
+    return create_engine(url, pool_pre_ping=True)
+
+# Stock session
 def getsession():
-    with Session(engine) as session:
+    engine_ = engine(url_stock)
+    with Session(engine_) as session:
         yield session
 
+# User session
+def getsession_user():
+    engine_ = engine(user_url)
+    with Session(engine_) as session:
+        yield session
 
 # -------- GET ORM --------
 from backend.app.core.models.generated_models import *
@@ -52,15 +64,25 @@ def get_model(table_name: str):
 
 # ------ GET USER ORM --------
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import String, Integer, Float
+from sqlalchemy import String, Integer, Float, DateTime
 
 class Base(DeclarativeBase):
     pass
 
-class UserTable(Base):
+class WatchList_Table(Base):
     __tablename__="user_watchlist"
     id : Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id : Mapped[int] = mapped_column(Integer)
     stock_symbol : Mapped[str] = mapped_column(String)
     comments : Mapped[str] = mapped_column(String)
+
+class TradeTable(Base):
+    __tablename__= "trades"
+    id : Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id : Mapped[int] = mapped_column(Integer)
+    stock_symbol : Mapped[str] = mapped_column(String)
+    trade_type : Mapped[str] = mapped_column(String)
+    quantity : Mapped[int] = mapped_column(Integer)
+    price : Mapped[float] = mapped_column(Float)
+    timestamp : Mapped[datetime] = mapped_column(DateTime) 
 
