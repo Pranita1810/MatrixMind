@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 
 
 class TradeBody(BaseModel):
-    id : int
     user_id : int
     stock_symbol : str
     trade_type : str
@@ -38,7 +37,7 @@ def add_trade(
         )
 
     new_trade = TradeTable(
-        user_id=data.user_id,
+        user_id = data.user_id,
         stock_symbol=data.stock_symbol,
         trade_type=data.trade_type,
         quantity=data.quantity,

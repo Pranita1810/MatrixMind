@@ -22,7 +22,6 @@ if str(BASE_DIR) not in sys.path:
 
 # Define Pydantic Body
 class WatchBody(BaseModel):
-    id : int
     user_id : int
     stock_symbol : str
     comments : str
