@@ -1,4 +1,4 @@
-***** REDIS *****
+	***** REDIS *****
 
 Concept : 
  - Remote Dictionary Server is an in-memory database that stores data in RAM for very fast access. It is mainly used for caching and reducing the load on the main server or database.

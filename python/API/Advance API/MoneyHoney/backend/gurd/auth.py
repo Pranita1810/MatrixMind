@@ -1,7 +1,7 @@
 import os 
 import jwt
 from datetime import datetime, timedelta, timezone
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, APIRouter
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 import secrets
 from dotenv import load_dotenv
@@ -12,6 +12,8 @@ load_dotenv()
 
 SECRET = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
+
+router = APIRouter(tags=["Authentication"])
 
 app = FastAPI(
     title="MoneyHoney Data API",
@@ -58,7 +60,7 @@ def create_refresh(username):
 
 
 # ------------------ MAIN AUTH ------------------
-@app.post("/login")
+@router.post("/login")
 def login(
     credentials : HTTPBasicCredentials = Depends(basic_auth)
 ):
@@ -80,7 +82,7 @@ def login(
     }
 
 
-@app.post("/refresh")
+@router.post("/refresh")
 def refresh(data: RefreshTokenRequest):
     try:
         payload = jwt.decode(
@@ -119,3 +121,5 @@ def refresh(data: RefreshTokenRequest):
             status_code=401,
             detail="Invalid refresh token"
         )
+
+app.include_router(router)

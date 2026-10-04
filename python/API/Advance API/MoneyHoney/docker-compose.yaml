@@ -1,0 +1,174 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------------------
+  # Redis: In-Memory Market Cache & Distributed Rate Limiter
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: moneyhoney-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --save 60 1
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ----------------------------------------------------------------------------
+  # 1. Auth Microservice (Port 8001)
+  # ----------------------------------------------------------------------------
+  auth-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: moneyhoney-auth
+    restart: always
+    environment:
+      - PORT=8001
+      - AUTH_USERNAME=${AUTH_USERNAME}
+      - PASSWORD=${PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+    command: uvicorn backend.gurd.auth:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+
+  # ----------------------------------------------------------------------------
+  # 2. Trades Microservice (Port 8002)
+  # ----------------------------------------------------------------------------
+  trades-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: moneyhoney-trades
+    restart: always
+    environment:
+      - PORT=8002
+      - DATABASE_URL_USERS=${DATABASE_URL_USERS}
+      - SECRET_KEY=${SECRET_KEY}
+    command: uvicorn backend.app.api.v1.endpoints.trades:app --host 0.0.0.0 --port 8002
+    ports:
+      - "8002:8002"
+    depends_on:
+      - redis
+
+  # ----------------------------------------------------------------------------
+  # 3. Users & Market Data Clustered Workers (Ports 8081 & 8082)
+  # ----------------------------------------------------------------------------
+  market-worker-1:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: moneyhoney-market-worker-1
+    restart: always
+    environment:
+      - PORT=8081
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL_LOCAL=${DATABASE_URL_DOCKER}
+      - DATABASE_URL_USERS=${DATABASE_URL_USERS}
+      - SECRET_KEY=${SECRET_KEY}
+    command: uvicorn backend.app.api.v1.endpoints.users:app --host 0.0.0.0 --port 8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  market-worker-2:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: moneyhoney-market-worker-2
+    restart: always
+    environment:
+      - PORT=8082
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL_LOCAL=${DATABASE_URL_DOCKER}
+      - DATABASE_URL_USERS=${DATABASE_URL_USERS}
+      - SECRET_KEY=${SECRET_KEY}
+    command: uvicorn backend.app.api.v1.endpoints.users:app --host 0.0.0.0 --port 8082
+    ports:
+      - "8082:8082"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # ----------------------------------------------------------------------------
+  # 4. Market Data Load Balancer (Port 8003)
+  # ----------------------------------------------------------------------------
+  market-data-lb:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: moneyhoney-market-lb
+    restart: always
+    environment:
+      - LB_PORT=8003
+      - BACKEND_WORKERS=http://market-worker-1:8081,http://market-worker-2:8082
+    command: uvicorn backend.gateway.load_balancer:app --host 0.0.0.0 --port 8003
+    ports:
+      - "8003:8003"
+    depends_on:
+      - market-worker-1
+      - market-worker-2
+
+  # ----------------------------------------------------------------------------
+  # 5. Central API Gateway (Port 8000)
+  # ----------------------------------------------------------------------------
+  api-gateway:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: moneyhoney-gateway
+    restart: always
+    environment:
+      - GATEWAY_PORT=8000
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - TRADES_SERVICE_URL=http://trades-service:8002
+      - USERS_SERVICE_URL=http://market-data-lb:8003
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET_KEY=${SECRET_KEY}
+      - RATE_LIMIT_ANON=60
+      - RATE_LIMIT_AUTH=180
+      - RATE_LIMIT_LOGIN=10
+    command: uvicorn backend.gateway.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+      trades-service:
+        condition: service_started
+      market-data-lb:
+        condition: service_started
+
+  # ----------------------------------------------------------------------------
+  # 6. Nginx: Edge Reverse Proxy Cache (Port 80)
+  # ----------------------------------------------------------------------------
+  nginx:
+    image: nginx:alpine
+    container_name: moneyhoney-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/conf.d/moneyhoney.conf:/etc/nginx/conf.d/moneyhoney.conf:ro
+      - nginx_cache:/var/cache/nginx/moneyhoney
+    depends_on:
+      - api-gateway
+
+volumes:
+  redis_data:
+  nginx_cache:

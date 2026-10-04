@@ -1,0 +1,13 @@
+[Unit]
+Description=AutoSSH Tunnel for SQL Server connection to Laptop SSMS
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/bin/bash /var/www/MoneyHoney/deploy/scripts/ssh_bridge.sh
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

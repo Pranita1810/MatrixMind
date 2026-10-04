@@ -1,0 +1,19 @@
+[Unit]
+Description=MoneyHoney FastAPI Backend Worker on Port %I
+After=network.target redis.service
+PartOf=moneyhoney.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/MoneyHoney
+Environment="PORT=%I"
+Environment="PYTHONPATH=/var/www/MoneyHoney"
+EnvironmentFile=/var/www/MoneyHoney/.env
+ExecStart=/var/www/MoneyHoney/.venv/bin/uvicorn backend.app.main:app --host 127.0.0.1 --port %I --workers 1
+Restart=always
+RestartSec=3s
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

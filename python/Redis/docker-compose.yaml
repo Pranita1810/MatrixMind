@@ -1,0 +1,7 @@
+# Redis is a serer, so we need to run that server using docker container !!
+
+services:
+    redis:
+      image: redis:latest
+      ports:
+        - "6379:6379"

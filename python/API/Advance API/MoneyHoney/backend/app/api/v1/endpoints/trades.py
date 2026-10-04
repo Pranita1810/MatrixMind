@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 import datetime as dt
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, APIRouter
 from backend.app.db.orm_session import getsession_user, TradeTable
 from backend.app.core.security import verify_access_token
 from sqlalchemy.orm import Session
@@ -17,14 +17,16 @@ class TradeBody(BaseModel):
 
 
 # -------- POST NEW TRADE --------
+router = APIRouter(tags=["Trades"])
+
 app = FastAPI(
     title="MoneyHoney Data API",
     description="High-performance financial market data endpoints",
     version="1.0.0",
     root_path="/mh/v1"
-            )
+)
 
-@app.post("/trade")
+@router.post("/trade")
 def add_trade(
     data: TradeBody,
     session: Session = Depends(getsession_user),
@@ -50,3 +52,5 @@ def add_trade(
     session.refresh(new_trade)
 
     return new_trade
+
+app.include_router(router)
