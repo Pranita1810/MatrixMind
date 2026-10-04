@@ -179,28 +179,49 @@ async def gateway_proxy(request: Request, path: str):
     auth_header = request.headers.get("Authorization")
     user_payload = None
     user_id = None
+    auth_error_detail = None
+    auth_error_code = "UNAUTHORIZED"
 
-    if auth_header and auth_header.startswith("Bearer "):
-        token = auth_header.split(" ", 1)[1]
+    if not auth_header:
+        auth_error_detail = "Authorization header missing. Bearer access token required."
+    elif not auth_header.startswith("Bearer "):
+        auth_error_detail = "Invalid Authorization header format. Expected 'Bearer <token>'."
+    else:
+        token = auth_header.split(" ", 1)[1].strip()
         try:
             user_payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            if user_payload.get("type") == "access":
+            if user_payload.get("type") != "access":
+                auth_error_detail = "Invalid token type: access token required (received refresh or invalid token)."
+                auth_error_code = "INVALID_TOKEN_TYPE"
+                user_payload = None
+            else:
                 user_id = user_payload.get("sub")
-        except jwt.PyJWTError:
+        except jwt.ExpiredSignatureError:
+            auth_error_detail = "Access token expired. Please refresh your token or log in again."
+            auth_error_code = "TOKEN_EXPIRED"
+            user_payload = None
+        except jwt.InvalidTokenError:
+            auth_error_detail = "Invalid or corrupted access token."
+            auth_error_code = "INVALID_TOKEN"
+            user_payload = None
+        except Exception as exc:
+            auth_error_detail = f"Token validation error: {str(exc)}"
+            auth_error_code = "AUTH_ERROR"
             user_payload = None
 
     # Enforce authentication if route is not public
     is_public = any(full_path.startswith(pub) for pub in PUBLIC_PATHS)
     if not is_public and user_payload is None:
-        logger.warning(f"[{request_id}] Unauthorized request to {full_path} from {client_ip}")
+        logger.warning(f"[{request_id}] Unauthorized request to {full_path} from {client_ip}: {auth_error_detail}")
         return JSONResponse(
             status_code=status.HTTP_401_UNAUTHORIZED,
             content={
                 "error": "Unauthorized",
-                "detail": "Valid Bearer access token required to access this endpoint",
+                "code": auth_error_code,
+                "detail": auth_error_detail or "Valid Bearer access token required to access this endpoint",
                 "request_id": request_id
             },
-            headers={"WWW-Authenticate": "Bearer", "X-Request-ID": request_id}
+            headers={"WWW-Authenticate": f'Bearer error="{auth_error_code.lower()}", error_description="{auth_error_detail}"', "X-Request-ID": request_id}
         )
 
     # 3. Rate Limiting check
