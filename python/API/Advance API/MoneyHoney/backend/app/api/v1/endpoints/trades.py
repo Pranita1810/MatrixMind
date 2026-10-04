@@ -26,6 +26,16 @@ app = FastAPI(
     root_path="/mh/v1"
 )
 
+@app.get("/home")
+@router.get("/home")
+def home():
+    return {"Message": "Trades service is live"}
+
+@app.get("/health")
+@router.get("/health")
+def health():
+    return {"status": "healthy", "service": "trades-service"}
+
 @router.post("/trade")
 def add_trade(
     data: TradeBody,

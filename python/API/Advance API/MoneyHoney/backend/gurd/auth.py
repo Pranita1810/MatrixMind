@@ -20,7 +20,18 @@ app = FastAPI(
     description="High-performance financial market data endpoints",
     version="1.0.0",
     root_path="/mh/v1"
-            )
+)
+
+@app.get("/home")
+@router.get("/home")
+def home():
+    return {"Message": "Auth service is live"}
+
+@app.get("/health")
+@router.get("/health")
+def health():
+    return {"status": "healthy", "service": "auth-service"}
+
 basic_auth = HTTPBasic()
 
 

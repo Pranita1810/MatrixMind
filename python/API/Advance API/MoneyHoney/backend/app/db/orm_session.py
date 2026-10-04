@@ -13,20 +13,56 @@ load_dotenv()
 url_stock = os.getenv("DATABASE_URL_LOCAL")
 user_url = os.getenv("DATABASE_URL_USERS")
 
-def engine(url):
-    return create_engine(url, pool_pre_ping=True)
+def normalize_db_url(url: str | None) -> str:
+    if not url:
+        return ""
+    # In Docker container on Windows/Linux, replace localhost with host.docker.internal
+    if (os.path.exists('/.dockerenv') or os.getenv("REDIS_HOST") == "redis") and "localhost" in url:
+        url = url.replace("localhost", "host.docker.internal")
+    return url
+
+_stock_engine = None
+_user_engine = None
+
+def get_stock_engine():
+    global _stock_engine
+    if _stock_engine is None:
+        stock_url = os.getenv("DATABASE_URL_LOCAL") or os.getenv("DATABASE_URL_DOCKER")
+        _stock_engine = create_engine(
+            normalize_db_url(stock_url),
+            pool_pre_ping=True,
+            pool_size=10,
+            max_overflow=20
+        )
+    return _stock_engine
+
+def get_user_engine():
+    global _user_engine
+    if _user_engine is None:
+        users_url = os.getenv("DATABASE_URL_USERS") or os.getenv("DATABASE_URL_USERS_DOCKER")
+        _user_engine = create_engine(
+            normalize_db_url(users_url),
+            pool_pre_ping=True,
+            pool_size=10,
+            max_overflow=20
+        )
+    return _user_engine
+
+def engine(url=None):
+    if url and ("MHUsers" in url or "users" in url.lower()):
+        return get_user_engine()
+    return get_stock_engine()
 
 # Stock session
 def getsession():
-    engine_ = engine(url_stock)
-    with Session(engine_) as session:
+    with Session(get_stock_engine()) as session:
         yield session
 
 # User session
 def getsession_user():
-    engine_ = engine(user_url)
-    with Session(engine_) as session:
+    with Session(get_user_engine()) as session:
         yield session
+
 
 # -------- GET ORM --------
 from backend.app.core.models.generated_models import *

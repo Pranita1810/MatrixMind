@@ -53,10 +53,17 @@ app = FastAPI(
 )
 
 
-# ----- Quick Status -----
+# ----- Quick Status & Health -----
+@app.get("/home")
 @router.get("/home")
 def status():
     return {"Message": "Application is live"}
+
+
+@app.get("/health")
+@router.get("/health")
+def health():
+    return {"status": "healthy", "service": "market-worker"}
 
 
 # ----- Get Full Data of a Ticker -----
