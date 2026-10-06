@@ -1,0 +1,202 @@
+********* AUTOMATION *********
+
+ Tech Automation: It is the process of using technology to automate tasks with little or no human intervention. It makes tasks easier, saves time, reduces errors, and lowers operational costs.
+
+## Type Of Automation:
+
+1. OS Automation
+2. Command Automation
+3. API Automation
+4. Web Automation
+5. Monitoring & Logging
+6. GUI Automation
+7. Testing Automation
+
+---
+
+### 1. OS Automation
+
+ Using Python to control your computer or server instead of manually doing repetitive OS tasks.
+ We use `os` and `shutil` modules for OS automation.
+ Used for:
+
+   Creating/deleting files and folders
+   Renaming and moving files
+   Checking file/folder existence
+   Reading environment variables
+   File backup and cleanup
+   Process and directory operations
+
+Main modules:
+
+ `os`
+ `shutil`
+ `pathlib`
+ `glob`
+
+---
+
+### 2. Command Automation
+
+ Using Python to automatically execute terminal/shell commands instead of manually typing them.
+ We mainly use the `subprocess` module.
+ Used for:
+
+   Running Linux/Windows commands
+   Installing packages
+   Running scripts
+   Starting/stopping services
+   Executing Docker commands
+   Checking server status
+
+Main module:
+
+ `subprocess`
+
+---
+
+### 3. API Automation
+
+ Using Python to communicate with APIs automatically instead of manually making API requests.
+ We use HTTP clients such as `requests` and `httpx`.
+ Used for:
+
+   Sending GET/POST/PUT/DELETE requests
+   Fetching data from APIs
+   Automating authentication
+   Calling microservices
+   Sending data between applications
+   Building API-based workflows
+
+Main libraries:
+
+ `requests`
+ `httpx`
+
+---
+
+### 4. Web Automation
+
+ Using Python to automatically interact with websites and web applications.
+ The program behaves like a user by opening websites, clicking buttons, entering data, downloading files, etc.
+ Used for:
+
+   Web scraping
+   Form filling
+   Data collection
+   Automated downloads
+   Browser testing
+   Repetitive website tasks
+
+Main tools:
+
+ Selenium
+ Playwright
+ BeautifulSoup
+ Scrapy
+
+---
+
+### 5. Monitoring & Logging Automation
+
+ Automatically monitoring applications, servers, APIs, databases, and systems and recording what is happening.
+ Used to detect problems without continuously checking the system manually.
+ Used for:
+
+   CPU/RAM/Disk monitoring
+   API health checks
+   Error detection
+   Application logs
+   Server monitoring
+   Alerts and notifications
+
+Main tools/modules:
+
+ `logging`
+ `psutil`
+ Prometheus
+ Grafana
+ ELK Stack
+
+---
+
+### 6. GUI Automation
+
+ Automating applications that normally require mouse and keyboard interaction.
+ Python can control the mouse, keyboard, windows, and screen.
+ Used for:
+
+   Clicking buttons
+   Typing automatically
+   Opening applications
+   Taking screenshots
+   Automating desktop applications
+
+Main tools:
+
+ PyAutoGUI
+ PyWinAuto
+ AutoHotkey
+
+---
+
+### 7. Testing Automation
+
+ Automatically testing software instead of manually testing every feature.
+ It helps find bugs quickly and ensures that existing functionality continues to work.
+ Used for:
+
+   Unit testing
+   API testing
+   Integration testing
+   End-to-end testing
+   Regression testing
+
+Main tools:
+
+ `pytest`
+ unittest
+ Selenium
+ Playwright
+ Postman/Newman
+
+---
+
+## Real-World Automation Flow
+
+Python Script → OS/Command → API → Database → Web → Monitoring → Alert
+
+Example:
+
+Python → Check server → Run command → Call API → Store result in DB → Generate log → Send alert
+
+## Important Python Automation Modules
+
+```text
+os
+shutil
+pathlib
+glob
+subprocess
+requests
+httpx
+logging
+json
+csv
+time
+datetime
+schedule
+threading
+asyncio
+pytest
+selenium
+playwright
+pyautogui
+psutil
+```
+
+## Automation Goal
+
+Manual Task → Python Script → Automated Process → Result
+
+The main objective is to make repetitive work faster, consistent, reliable, and less dependent on human intervention.
