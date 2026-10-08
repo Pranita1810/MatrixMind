@@ -1,0 +1,18 @@
+
+
+- We sotre data into differnt types of data storage like DBMS, RDBMS, Cloud DB, DataWarehouses, DataLakes. These tools help engineer to building
+  a successful data pipeline.
+
+- CONCEPTS :
+    1. Data Normalization - It is a designing technique that reduce redundancy and improve consitancy in data. In simple terms it breaks Large
+                            messy tables into small well organized once. This ensure data is stored logically, making database efficient.
+    
+    2. Data Modeling & Technique - Data Modeling is a process of organizinig structure and relation of the data within data system. It uses entiry relation
+                                   Snowflake schema, star schema. It affect query performance and other data operations.
+
+    3. CAP Theorem - Thsi throrem states that the distributed system saving data across multiple servers can only guarantee 2 out of 3 features
+                     i.e. consitancy, avaibility & partition tolerance at the time when a network breakdown happens.
+
+    4. OLTP & OLAP - Online transaction process system are optimized for fast, frequent read & write operations, where as online analytical processing systems
+                     are designed for complex queries over large datasets which is used fo reporting and analytics.
+                     
