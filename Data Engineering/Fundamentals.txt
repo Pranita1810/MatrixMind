@@ -1,0 +1,39 @@
+***** DATA ENGINEERING *****
+
+- Data engineering is builing systems that collects data from various sources to transform, clean & organize data which is used
+  for different objectives in organization like analytics, machine learning, AI etc. So basically data engineering is a digital pipeline
+  that defines journy of raw data.
+
+- CONCEPTS:
+    1. Programming skills
+    2. DSA
+    3. Git & Github
+    4. Linux
+    5. Network fundamentals
+    6. Distributed systems.
+    7. I/O 
+    8. Data Modeling & transformation
+    9. CAP Theorem
+    10 OLAP & OLTP
+    11.RDBMS & NoSQL
+    12.Data Warehouse, Data lakes
+    13.Cloud computing
+    14.Data pipeline
+    15.Big data tools
+    16.DevOps & Infra
+    17.Security
+    18.Data governance
+
+
+- There are very vast list of concept we will learn it one by one.
+
+Format	Approx. storage for 1 GB raw data	Read/Query speed	Best use
+CSV	        ~1.0 GB	        🐢 Slow	Simple exchange
+JSON	    ~1.5–3 GB	    🐢 Slow	APIs / documents
+Excel	    ~1–2 GB	        🐢 Slow	Human use
+SQL table	~0.8–1.5 GB*	🟢 Fast	Transactions + queries
+Parquet	    ~200–500 MB	   🚀 Very fast	Analytics / Data Lake
+ORC	        ~200–500 MB	   🚀 Very fast	Big-data analytics
+ClickHouse	~100–400 MB*   ⚡ Extremely fast	Large-scale analytics
+
+

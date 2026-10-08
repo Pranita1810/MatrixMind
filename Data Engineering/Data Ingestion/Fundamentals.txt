@@ -1,0 +1,16 @@
+******** DATA INGESTION ********
+
+- Data Ingestion is the process of collecting data from different sources for analytics, business intelligence, processing. Organizations use
+  data ingestion for analysis, business intelligence, feeding data to AI, building machine learning models.
+
+
+- Sources :
+  1. Flat Files & Serialization:                     CSV, JSON, Parquet, Excel (.xlsx), Text, Avro, Feather, Pickle.
+  2. Relational & Analytical Databases (RDBMS/OLAP): PostgreSQL, MS SQL Server, MySQL, SQLite, ClickHouse, DuckDB.
+  3. NoSQL & Document Stores:                        MongoDB, Redis, Cassandra, DynamoDB.
+  4. Web & REST APIs:                                Requests, HTTPX, aiohttp (GET, POST, PUT, DELETE, PATCH).
+  5. Cloud Lakehouses & Warehouses:                  Snowflake, Databricks (Delta Lake), AWS S3, Google BigQuery.
+  6. Business Intelligence & Reporting:              Power BI REST APIs, Tableau Server Client.
+
+
+## Take Reference From I/O learnings.
