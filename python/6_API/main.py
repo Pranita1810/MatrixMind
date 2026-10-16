@@ -38,10 +38,9 @@ async def status():
     return {"Message": "Your API is now live"}
 
 @app.get("/data")
-async def data():
-    with Session(engine) as session:
-        result = session.execute(select(MyTable))
-        return result.scalars().all()
+async def data(session : Session = Depends(getsession)):
+    result = session.execute(select(MyTable))
+    return result.scalars().all()
 
 @app.post("/Insert")
 async def insert_data(data:DataVal, session: Session = Depends(getsession)):

@@ -44,3 +44,11 @@
    3. Sequential loops add together: Loop(n) + Loop(m) = O(n + m).
    4. Nested operations multiply: Loop(n) inside Loop(n) = O(n * n) = O(n^2).
    5. Halving search space implies logarithms: Dividing search space by 2 each step = O(log n).
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. Think Like a Programmer :
+	- Steps:
+		1. Understand the problem statement, gather the requirement and output needed.
+		2. Algorithm, define think break the problem and convert it into algorithm.
+		3. Start testing, remember the output, try differnt algos.
+		4. Code.

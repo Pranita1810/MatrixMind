@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Production API Builder Roadmap (FastAPI + PostgreSQL)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0F4; --surface:#FFFFFF; --surface2:#F5F7FA; --ink:#12213A; --muted:#51607A;
+  --line:#CCD4DF; --accent:#0B6E6E; --accent-ink:#FFFFFF; --warn:#A04E08; --warnbg:#FBF0E4;
+  --rulebg:#E4F2F1; --codebg:#0F1B2D; --codeink:#DCE6F2;
+  --head:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1520; --surface:#142133; --surface2:#1A2A40; --ink:#E5ECF5; --muted:#9AA9BF;
+    --line:#2A3B52; --accent:#3FBFB4; --accent-ink:#06201E; --warn:#F0A25B; --warnbg:#2B2013;
+    --rulebg:#12302F; --codebg:#09111C; --codeink:#D6E2F0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1520; --surface:#142133; --surface2:#1A2A40; --ink:#E5ECF5; --muted:#9AA9BF;
+  --line:#2A3B52; --accent:#3FBFB4; --accent-ink:#06201E; --warn:#F0A25B; --warnbg:#2B2013;
+  --rulebg:#12302F; --codebg:#09111C; --codeink:#D6E2F0;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);max-width:1280px;margin:0 auto}
+
+/* sidebar spine */
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;padding:28px 18px 28px 26px;border-right:1px solid var(--line)}
+.brand{font:700 18px/1.2 var(--head);margin:0 0 4px}
+.sub{font-size:13px;color:var(--muted);margin:0 0 16px}
+.overall{margin-bottom:18px}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.overall small{display:block;margin-top:6px;color:var(--muted);font-size:13px}
+.spine{list-style:none;margin:0;padding:0;position:relative}
+.spine::before{content:"";position:absolute;left:11px;top:10px;bottom:10px;width:2px;background:var(--line)}
+.spine a{display:flex;gap:12px;align-items:center;padding:5px 0;text-decoration:none;color:var(--ink);font-size:14px;position:relative}
+.spine a:hover span.t{text-decoration:underline}
+.node{flex:none;width:24px;height:24px;border-radius:50%;background:var(--surface);border:2px solid var(--line);position:relative;display:grid;place-items:center;font:500 10px var(--mono);color:var(--muted)}
+.node::before{content:"";position:absolute;inset:-2px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p,0)*1%),transparent 0);-webkit-mask:radial-gradient(circle,transparent 9px,#000 10px);mask:radial-gradient(circle,transparent 9px,#000 10px)}
+.node.done{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.spine .gap{margin:10px 0 4px 36px;font-size:12px;color:var(--muted);font-weight:600}
+.tools{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+button.btn{font:500 13px var(--body);padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+button.btn:hover{border-color:var(--accent)}
+#jump{display:none;width:100%;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+
+main{padding:40px 36px 100px;min-width:0}
+h1{font:700 clamp(30px,4.6vw,48px)/1.08 var(--head);margin:0 0 14px;letter-spacing:-.02em;max-width:18ch}
+h2{font:700 clamp(22px,3vw,30px)/1.15 var(--head);margin:0;letter-spacing:-.01em}
+h3{font:600 15px/1.3 var(--head);margin:0 0 8px}
+.lede{font-size:18px;max-width:62ch;color:var(--muted);margin:0 0 28px}
+section.block{margin:0 0 20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel ul,.panel ol{margin:6px 0 0;padding-left:20px}
+.panel li{margin:3px 0}
+
+/* phases */
+.phase{margin:34px 0 0;scroll-margin-top:20px}
+.phead{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:end;padding-bottom:12px;border-bottom:2px solid var(--ink)}
+.pnum{font:700 clamp(44px,6vw,68px)/.85 var(--head);color:var(--accent);letter-spacing:-.03em}
+.goal{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.count{font:500 13px var(--mono);color:var(--muted);white-space:nowrap;padding-bottom:4px}
+.steps{margin:0;padding:0;list-style:none;background:var(--surface);border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px}
+.steps li{display:grid;grid-template-columns:28px 52px minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:start;padding:11px 16px;border-top:1px solid var(--line)}
+.steps li:first-child{border-top:0}
+.steps input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent);cursor:pointer}
+.sn{font:500 13px var(--mono);color:var(--muted);padding-top:2px}
+.sc{font-weight:600;overflow-wrap:anywhere}
+.sw{color:var(--muted)}
+.steps li.on .sc{text-decoration:line-through;text-decoration-color:var(--accent);text-decoration-thickness:2px}
+.steps li.on{background:var(--surface2)}
+code,.mono{font-family:var(--mono);font-size:.9em}
+.callout{margin:14px 0 0;padding:12px 16px;border-radius:10px;border-left:4px solid var(--accent);background:var(--rulebg)}
+.callout.warn{border-color:var(--warn);background:var(--warnbg)}
+.callout b{font-weight:600}
+pre{margin:12px 0 0;background:var(--codebg);color:var(--codeink);border-radius:10px;padding:14px 16px;overflow-x:auto;font:400 13px/1.55 var(--mono);tab-size:2}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0 0;padding:0;list-style:none}
+.flow li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:14px}
+.flow li+li::before{content:"\2192";margin-right:8px;color:var(--accent);font-weight:700}
+.flow li{display:flex}
+.dive{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.dive>summary{cursor:pointer;padding:12px 18px;font:600 15px var(--head);list-style:none;display:flex;justify-content:space-between;align-items:center}
+.dive>summary::-webkit-details-marker{display:none}
+.dive>summary::after{content:"+";font:500 20px var(--mono);color:var(--accent)}
+.dive[open]>summary::after{content:"\2212"}
+.dive .inner{padding:4px 18px 18px;display:grid;grid-template-columns:1fr 1fr;gap:18px 28px}
+.dive .full{grid-column:1/-1}
+.dive ul{margin:4px 0 0;padding-left:18px}
+.dive li{margin:4px 0}
+.dive h4{margin:0 0 4px;font:600 13px var(--head);color:var(--accent)}
+.tag{display:inline-block;font:500 12px var(--mono);padding:2px 8px;border-radius:99px;background:var(--surface2);border:1px solid var(--line);color:var(--muted)}
+
+/* checklists */
+.check{list-style:none;padding:0!important;margin:10px 0 0}
+.check li{margin:0!important}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:7px 0;cursor:pointer}
+.check input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent);flex:none}
+.check input:checked+span{text-decoration:line-through;text-decoration-color:var(--accent);color:var(--muted)}
+.week{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.week small{color:var(--muted);font:500 12px var(--mono)}
+.big-rule{margin:26px 0 0;padding:26px 28px;background:var(--ink);color:var(--bg);border-radius:14px;font:500 clamp(18px,2.4vw,24px)/1.35 var(--head)}
+.big-rule span{color:var(--accent);filter:brightness(1.4)}
+footer{margin-top:40px;color:var(--muted);font-size:13px}
+
+@media (max-width:980px){
+  .layout{grid-template-columns:1fr}
+  aside{position:sticky;top:0;z-index:5;height:auto;overflow:visible;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line);background:var(--bg)}
+  .spine,.sub,.tools,.brand{display:none}
+  #jump{display:block;margin-top:10px}
+  .overall{margin:0}
+  main{padding:24px 16px 80px}
+}
+@media (max-width:720px){
+  .grid2,.dive .inner{grid-template-columns:1fr}
+  .steps li{grid-template-columns:28px 1fr;row-gap:2px}
+  .steps li .sn{grid-column:2;padding:0}
+  .steps li .sc{grid-column:2}
+  .steps li .sw{grid-column:2}
+  .phead{grid-template-columns:auto 1fr}
+  .count{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar>i{transition:none}}
+@media print{aside,.tools,#jump{display:none}.layout{display:block}.dive:not([open])>.inner{display:block}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <p class="brand">Production API roadmap</p>
+  <p class="sub">FastAPI &middot; PostgreSQL &middot; SQLAlchemy</p>
+  <div class="overall">
+    <div class="bar" role="progressbar" aria-label="Overall progress" aria-valuemin="0" aria-valuemax="100" id="overallbar"><i id="overallfill"></i></div>
+    <small id="overalltext">0 of 0 steps done</small>
+  </div>
+  <select id="jump" aria-label="Jump to section"></select>
+  <ol class="spine" id="spine"></ol>
+  <div class="tools">
+    <button class="btn" id="themebtn" type="button">Toggle theme</button>
+    <button class="btn" id="resetbtn" type="button">Reset progress</button>
+  </div>
+</aside>
+
+<main>
+  <header id="top">
+    <h1>Become a production-level API builder</h1>
+    <p class="lede">A 16-phase path from your first endpoint to a tested, monitored, deployed API. Every step from your original plan is here, and each phase adds a build exercise, common mistakes, self-check questions, a code example and reading. Tick steps as you finish them; progress is saved in this browser.</p>
+  </header>
+
+  <section class="block grid2" id="start">
+    <div class="panel">
+      <h3>Before you start</h3>
+      <ul>
+        <li>Python: functions, classes, type hints, virtual environments, exceptions.</li>
+        <li>HTTP: methods, headers, status codes, cookies, what TLS does.</li>
+        <li>SQL: joins, GROUP BY, indexes, transactions. Write queries by hand before trusting an ORM.</li>
+        <li>Git, the Linux command line, and Docker basics (images vs containers).</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Study loop for every step</h3>
+      <ol>
+        <li><b>Read</b> the official docs for the component (20 min).</li>
+        <li><b>Build</b> it in your one running project, not a throwaway demo.</li>
+        <li><b>Break</b> it on purpose: bad input, killed process, slow dependency.</li>
+        <li><b>Test</b> the failure so it can never silently come back.</li>
+        <li><b>Write down</b> one decision and why (a short ADR in <code>docs/</code>).</li>
+      </ol>
+    </div>
+  </section>
+
+  <div id="phases"></div>
+
+  <section class="phase" id="plan">
+    <div class="phead"><div class="pnum">+</div><div><h2>The build order I recommend</h2><p class="goal">A 4-week implementation checklist. This is a focused practice schedule, not a guarantee of production expertise. Adjust based on your implementation experience.</p></div><div class="count" id="plancount"></div></div>
+    <div class="grid2" id="weeks" style="margin-top:16px"></div>
+  </section>
+
+  <section class="phase" id="capstone">
+    <div class="phead"><div class="pnum">&#9733;</div><div><h2>Capstone: Orders &amp; Inventory API</h2><p class="goal">One project that touches every phase. Build it once, then keep strengthening it. Your original goal of data engineering fits in the import job.</p></div><div></div></div>
+    <div class="panel" style="margin-top:16px">
+      <div class="grid2">
+        <div>
+          <h3>What it does</h3>
+          <ul>
+            <li>Users register, log in and manage their own orders.</li>
+            <li>Admins manage products and stock; stock can never go negative.</li>
+            <li>Placing an order reserves stock inside one transaction and is safe to retry (idempotency key).</li>
+            <li>Admins upload a products CSV; a worker validates and loads it in chunks with a visible job status.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Milestones</h3>
+          <ul>
+            <li><b>Week 1:</b> products CRUD, pagination, filtering, OpenAPI contract.</li>
+            <li><b>Week 2:</b> orders, services, JWT auth, ownership checks, 30+ tests.</li>
+            <li><b>Week 3:</b> request IDs, rate limits, Redis cache, CSV import job.</li>
+            <li><b>Week 4:</b> Docker, CI/CD, staging, metrics, backup and restore drill.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout"><b>Stretch goals once it ships:</b> optimistic locking on stock, an outbox table for order events, a load test report with p95 latency, and a written postmortem of one failure you caused on purpose.</div>
+    </div>
+  </section>
+
+  <section class="phase" id="ready">
+    <div class="phead"><div class="pnum">&#10003;</div><div><h2>Your final production readiness checklist</h2><p class="goal">Before calling your API production-ready, verify that:</p></div><div class="count" id="readycount"></div></div>
+    <div class="panel" style="margin-top:16px"><ul class="check" id="readylist"></ul></div>
+    <div class="big-rule">The most important rule: build one complete API end to end first. Then strengthen it phase by phase. A tested, monitored and deployed API is more valuable than knowing 100 framework features without having shipped anything.</div>
+  </section>
+
+  <footer>Progress is stored locally in your browser. Clearing site data or using "Reset progress" removes it.</footer>
+</main>
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const PHASES = [
+{
+ id:1, title:`Requirements and API design`, goal:`Decide what you're building before writing code.`,
+ steps:[
+  [`1.1`,`Define resources: users, products, orders`,`Identify what your API manages.`],
+  [`1.2`,`Define endpoints: GET /products, POST /products`,`Create a predictable API structure.`],
+  [`1.3`,`Choose HTTP methods: GET, POST, PUT, PATCH, DELETE`,`Define read, create, replace, update and delete operations.`],
+  [`1.4`,`Design status codes: 200, 201, 204, 400, 401, 403, 404, 409, 422, 500`,`Communicate outcomes consistently.`],
+  [`1.5`,`Define request and response JSON`,`Ensure clients know what to send and expect.`],
+  [`1.6`,`Decide pagination, filtering, sorting`,`Avoid returning huge datasets.`],
+  [`1.7`,`Version endpoints: /api/v1/products`,`Evolve your API without unexpectedly breaking clients.`],
+  [`1.8`,`Write an OpenAPI contract`,`Document and review the API before implementation.`]
+ ],
+ code:{label:`A minimal OpenAPI contract for one endpoint`, text:`openapi: 3.1.0
+info: { title: Shop API, version: 1.0.0 }
+paths:
+  /api/v1/products:
+    post:
+      summary: Create a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductCreate" }
+      responses:
+        "201": { description: Created }
+        "409": { description: SKU already exists }
+        "422": { description: Validation error }
+components:
+  schemas:
+    ProductCreate:
+      type: object
+      required: [sku, name, price]
+      properties:
+        sku:   { type: string, maxLength: 40 }
+        name:  { type: string, minLength: 1 }
+        price: { type: string, pattern: "^\\\\d+\\\\.\\\\d{2}$" }`},
+ practice:[`Write <code>openapi.yaml</code> for products and orders: 6 endpoints, example payloads and every error response.`,`Paste it into Swagger Editor and fix every warning.`,`Ask someone to build a client from it without reading your code.`],
+ mistakes:[`Verbs in URLs (<code>/createOrder</code>) instead of resources plus methods.`,`Returning 200 with an error body, so clients can't branch on status.`,`Mixing PUT (replace everything) and PATCH (change some fields).`,`No pagination limit, so one request can return a million rows.`],
+ ask:[`Why is PUT idempotent but POST not? What does that change for retries?`,`When do you return 409 vs 422 vs 400?`,`Which changes break clients and force /v2?`],
+ done:`A reviewer can implement a client from your OpenAPI file alone.`,
+ read:[[`OpenAPI specification`,`https://spec.openapis.org/oas/latest.html`],[`Learn OpenAPI`,`https://learn.openapis.org`]]
+},
+{
+ id:2, title:`Project structure and configuration`, goal:`Make the code maintainable as the API grows.`,
+ steps:[
+  [`2.1`,`main.py, APIRouter`,`Keep the application entry point small and group endpoints by domain.`],
+  [`2.2`,`settings.py, pydantic-settings`,`Validate configuration and load environment variables.`],
+  [`2.3`,`.env, .env.example`,`Separate local configuration from source code. Never commit secrets.`],
+  [`2.4`,`requirements.txt or pyproject.toml`,`Pin and manage dependencies reproducibly.`],
+  [`2.5`,`config, api, schemas, models, services, repositories`,`Separate responsibilities; add layers where they genuinely help.`],
+  [`2.6`,`lifespan`,`Initialize and close shared resources such as connection pools.`],
+  [`2.7`,`logging configuration`,`Record useful application events and diagnose production issues.`]
+ ],
+ tree:`app/
+  main.py
+  core/
+    config.py
+    security.py
+    logging.py
+  api/v1/
+    router.py
+    endpoints/
+  schemas/
+  models/
+  repositories/
+  services/
+  db/
+    session.py
+  middleware/
+tests/
+migrations/
+Dockerfile
+compose.yaml`,
+ notes:[[`rule`,`Suggested structure above. Keep this as a starting point, not a rule that every small project must follow exactly.`]],
+ code:{label:`Validated settings and a lifespan that owns shared resources`, text:`from contextlib import asynccontextmanager
+import httpx
+from fastapi import FastAPI
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env")
+    database_url: str          # missing value => app refuses to start
+    jwt_secret: str
+    debug: bool = False
+
+settings = Settings()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.http = httpx.AsyncClient(timeout=5.0)
+    yield                      # app serves requests here
+    await app.state.http.aclose()
+
+app = FastAPI(lifespan=lifespan)`},
+ practice:[`Create the skeleton with <code>/health</code>, settings and two routers; it must boot using only environment variables.`,`Add <code>.env.example</code> with fake values and confirm <code>.env</code> is in <code>.gitignore</code>.`],
+ mistakes:[`Reading <code>os.environ</code> all over the code instead of one Settings object.`,`Committing <code>.env</code> or real keys; rotate any key that was ever pushed.`,`Creating clients (HTTP, Redis) per request instead of once in lifespan.`],
+ ask:[`Why should the app crash at startup if a required setting is missing?`,`What belongs in lifespan vs per-request dependencies?`,`Why pin dependency versions?`],
+ done:`A new teammate can clone, copy <code>.env.example</code>, and run the app in under 10 minutes.`,
+ read:[[`FastAPI: bigger applications`,`https://fastapi.tiangolo.com/tutorial/bigger-applications/`],[`pydantic-settings`,`https://docs.pydantic.dev/latest/concepts/pydantic_settings/`]]
+},
+{
+ id:3, title:`Database and ORM`, goal:`Store and retrieve data reliably under concurrent requests.`,
+ steps:[
+  [`3.1`,`create_engine() / connection pool`,`Reuse database connections efficiently.`],
+  [`3.2`,`DeclarativeBase, Mapped, mapped_column()`,`Define ORM models that map Python classes to database tables.`],
+  [`3.3`,`SessionLocal, Session`,`Manage database interactions for each unit of work.`],
+  [`3.4`,`get_db() with yield`,`Provide a session and ensure it is cleaned up.`],
+  [`3.5`,`select(), session.execute()`,`Query data safely using SQLAlchemy.`],
+  [`3.6`,`add(), flush(), commit(), rollback()`,`Control inserts, transaction boundaries and failure recovery.`],
+  [`3.7`,`Foreign keys, unique constraints, NOT NULL, CHECK`,`Enforce data integrity in the database itself.`],
+  [`3.8`,`Indexes, EXPLAIN ANALYZE`,`Optimize frequent filters, joins and sorts.`],
+  [`3.9`,`Alembic migrations`,`Apply schema changes across development, staging and production.`],
+  [`3.10`,`Transactions and isolation levels`,`Prevent inconsistent updates in multi-step operations.`],
+  [`3.11`,`N+1 queries, eager loading`,`Avoid excessive database queries when retrieving relationships.`],
+  [`3.12`,`Connection pool sizing and timeouts`,`Control resource usage under load.`]
+ ],
+ notes:[[`rule`,`<b>Production rule:</b> Never assume that Pydantic validation alone protects your database. Enforce critical constraints in the database too.`]],
+ code:{label:`A model with database-level guarantees, plus the session dependency`, text:`from decimal import Decimal
+from sqlalchemy import CheckConstraint, Numeric, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+class Base(DeclarativeBase): ...
+
+class Product(Base):
+    __tablename__ = "products"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    sku: Mapped[str] = mapped_column(String(40), unique=True)
+    name: Mapped[str] = mapped_column(String(120))
+    price: Mapped[Decimal] = mapped_column(Numeric(12, 2))
+    stock: Mapped[int] = mapped_column(default=0)
+    __table_args__ = (
+        CheckConstraint("price >= 0", name="ck_price_nonneg"),
+        CheckConstraint("stock >= 0", name="ck_stock_nonneg"),
+    )
+
+def get_db():
+    with SessionLocal() as db:   # closed even if the request fails
+        yield db`},
+ practice:[`Model users, products and orders with foreign keys; generate the schema only through Alembic migrations.`,`Seed 100k products. Run <code>EXPLAIN ANALYZE</code> on a filter before and after adding an index.`,`Trigger an N+1 on purpose (list orders with items), then fix it with <code>selectinload</code>.`,`Try to insert a negative stock value and watch the database reject it.`],
+ mistakes:[`Editing tables by hand instead of through migrations.`,`Lazy-loading relationships inside a loop (N+1).`,`Holding a transaction open while calling a slow external API.`,`Pool size times worker count exceeding Postgres <code>max_connections</code>.`],
+ ask:[`What happens to uncommitted work if an exception is raised mid-request?`,`Two users buy the last item at once: what stops overselling?`,`How does an index help a query, and what does it cost on writes?`],
+ done:`Schema is created by migrations, constraints reject bad data, and your slowest query has been explained and fixed.`,
+ read:[[`SQLAlchemy 2.0 tutorial`,`https://docs.sqlalchemy.org/en/20/tutorial/`],[`Alembic tutorial`,`https://alembic.sqlalchemy.org/en/latest/tutorial.html`],[`Use The Index, Luke`,`https://use-the-index-luke.com`]]
+},
+{
+ id:4, title:`Request validation and response design`, goal:`Accept valid input and return predictable output.`,
+ steps:[
+  [`4.1`,`BaseModel`,`Define input and output schemas.`],
+  [`4.2`,`Field(), min_length, ge, le`,`Validate types, ranges and lengths.`],
+  [`4.3`,`model_validator`,`Validate rules involving multiple fields.`],
+  [`4.4`,`Path(), Query(), Header()`,`Validate and document URL parameters and headers.`],
+  [`4.5`,`response_model`,`Control response shape and avoid exposing internal fields.`],
+  [`4.6`,`Separate Create, Update, Read schemas`,`Prevent clients from supplying server-managed fields.`],
+  [`4.7`,`exclude_unset=True`,`Support partial updates without overwriting omitted fields.`],
+  [`4.8`,`Pagination, sorting, filtering`,`Provide controlled access to larger collections.`],
+  [`4.9`,`Consistent error schema`,`Make errors predictable for frontend and API clients.`]
+ ],
+ notes:[[`rule`,`In production, use <code>Decimal</code> for monetary values rather than floating-point numbers, and carefully distinguish omitted fields from explicit null values in update schemas.`]],
+ code:{label:`Schema separation from your plan, hardened with Decimal and partial updates`, text:`from decimal import Decimal
+from pydantic import BaseModel, Field, ConfigDict
+
+class ProductCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    price: Decimal = Field(ge=0, max_digits=12, decimal_places=2)
+
+class ProductUpdate(BaseModel):
+    name: str | None = Field(default=None, min_length=1, max_length=120)
+    price: Decimal | None = Field(default=None, ge=0)
+
+class ProductRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    price: Decimal
+
+@router.patch("/products/{product_id}", response_model=ProductRead)
+def update_product(product_id: int, payload: ProductUpdate, db=Depends(get_db)):
+    changes = payload.model_dump(exclude_unset=True)  # only what the client sent
+    ...`},
+ practice:[`Build full create/read/update/delete for products with three separate schemas.`,`Write a test proving that <code>{}</code>, <code>{"price": null}</code> and <code>{"price": 10}</code> behave differently on PATCH.`,`Return the same error envelope for validation errors and your own domain errors.`],
+ mistakes:[`One schema for input and output, so clients can set <code>id</code> or <code>is_admin</code>.`,`Using <code>float</code> for money.`,`Treating "field omitted" and "field set to null" as the same thing.`],
+ ask:[`Which fields must a client never be able to set, and how do your schemas enforce it?`,`Why does response_model matter for security?`,`How would you validate that <code>end_date</code> is after <code>start_date</code>?`],
+ done:`No endpoint accepts or returns a raw ORM object, and every error has the same JSON shape.`,
+ read:[[`Pydantic docs`,`https://docs.pydantic.dev/latest/`],[`FastAPI response model`,`https://fastapi.tiangolo.com/tutorial/response-model/`]]
+},
+{
+ id:5, title:`Application architecture`, goal:`Keep business logic independent of HTTP handling and database details.`,
+ steps:[
+  [`5.1`,`APIRouter`,`HTTP routes and request handling.`],
+  [`5.2`,`Depends()`,`Inject database sessions, authenticated users and shared dependencies.`],
+  [`5.3`,`Service functions/classes`,`Implement business rules and coordinate operations.`],
+  [`5.4`,`Repository functions/classes`,`Encapsulate database access when useful.`],
+  [`5.5`,`Domain exceptions`,`Represent conditions such as insufficient inventory or duplicate orders.`],
+  [`5.6`,`Exception handlers`,`Convert known exceptions into consistent HTTP responses.`],
+  [`5.7`,`Transaction boundaries`,`Commit or roll back related database changes together.`],
+  [`5.8`,`External-service clients`,`Isolate calls to payment, email or third-party APIs.`]
+ ],
+ flow:[`Client / HTTP request`,`Router + validation`,`Authentication + authorization`,`Service / business logic`,`Repository / SQLAlchemy`,`PostgreSQL`],
+ notes:[[`rule`,`This is a useful default architecture, not a mandatory number of layers. For a simple CRUD endpoint, avoid unnecessary abstraction.`]],
+ code:{label:`A service that knows nothing about HTTP`, text:`class InsufficientStock(Exception):
+    def __init__(self, sku: str):
+        self.sku = sku
+
+def place_order(db, user_id: int, items: list[Item]) -> Order:
+    try:
+        order = Order(user_id=user_id)
+        db.add(order)
+        for it in items:
+            reserve_stock(db, it.sku, it.qty)   # raises InsufficientStock
+            order.lines.append(OrderLine(sku=it.sku, qty=it.qty))
+        db.commit()                             # all changes or none
+        return order
+    except Exception:
+        db.rollback()
+        raise
+
+# in main.py: the only place that knows about HTTP
+@app.exception_handler(InsufficientStock)
+async def stock_handler(request, exc):
+    return JSONResponse(status_code=409,
+        content={"error": {"code": "insufficient_stock", "sku": exc.sku}})`},
+ practice:[`Move one real use case (place an order) into a service function with no FastAPI imports.`,`Unit test the service directly against a test database session.`,`Map each domain exception to one status code in a single handler module.`],
+ mistakes:[`Business rules inside route functions, so they can't be reused or tested without HTTP.`,`Committing in several places, leaving partial writes after a failure.`,`Creating a repository, service and interface for a three-line query.`],
+ ask:[`Where does <code>commit()</code> live, and why there?`,`Could you reuse your service from a CLI script or a worker? What would stop you?`,`What belongs in the repository vs the service?`],
+ done:`Routes are thin (parse, call service, return), and the service layer is tested without a web server.`,
+ read:[[`FastAPI dependencies`,`https://fastapi.tiangolo.com/tutorial/dependencies/`],[`Cosmic Python (architecture patterns)`,`https://www.cosmicpython.com`]]
+},
+{
+ id:6, title:`Authentication and authorization`, goal:`Establish who the caller is and what they are permitted to do.`,
+ steps:[
+  [`6.1`,`Password hashing with Argon2id`,`Store password hashes, never plaintext passwords.`],
+  [`6.2`,`Login and logout endpoints`,`Establish and end sessions or token-based access.`],
+  [`6.3`,`OAuth2 / OpenID Connect concepts`,`Integrate standards-based authentication where appropriate.`],
+  [`6.4`,`Short-lived access tokens`,`Limit the damage if a token is exposed.`],
+  [`6.5`,`Refresh-token rotation and revocation`,`Renew access securely and detect token reuse.`],
+  [`6.6`,`HTTPBearer, OAuth2PasswordBearer`,`Extract credentials and integrate authentication with FastAPI.`],
+  [`6.7`,`Token signature, expiry, issuer and audience validation`,`Reject invalid or misdirected tokens.`],
+  [`6.8`,`get_current_user()`,`Resolve the authenticated identity.`],
+  [`6.9`,`Roles and permissions`,`Restrict administrative or privileged actions.`],
+  [`6.10`,`Object-level authorization`,`Prevent a user from accessing another user's records by changing an ID.`],
+  [`6.11`,`API keys for service access`,`Authenticate machine clients; scope, rotate and revoke keys.`],
+  [`6.12`,`Secret management`,`Keep signing keys and credentials out of source code and logs.`]
+ ],
+ notes:[[`rule`,`<b>Critical distinction:</b> Authentication answers "Who are you?" Authorization answers "Are you allowed to do this?" Implement both.`],[`rule`,`For production user authentication, prefer a proven identity provider or well-tested library over building your own token protocol from scratch.`]],
+ code:{label:`Hashing and an object-level check`, text:`from argon2 import PasswordHasher          # pip install argon2-cffi
+from argon2.exceptions import VerifyMismatchError
+
+ph = PasswordHasher()                       # Argon2id by default
+
+def hash_password(pw: str) -> str:
+    return ph.hash(pw)
+
+def check_password(stored_hash: str, pw: str) -> bool:
+    try:
+        return ph.verify(stored_hash, pw)
+    except VerifyMismatchError:
+        return False
+
+@router.get("/orders/{order_id}", response_model=OrderRead)
+def get_order(order_id: int, user=Depends(get_current_user), db=Depends(get_db)):
+    order = db.get(Order, order_id)
+    # same 404 for "missing" and "not yours": don't leak which ids exist
+    if order is None or order.user_id != user.id:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order`},
+ practice:[`Implement register, login and refresh with rotation; or integrate an identity provider (Keycloak, Auth0, Cognito) and validate its tokens.`,`Add an <code>admin</code> role guarding product writes.`,`Write the test: Alice requests Bob's order id and must get 404.`,`Search your code for any secret and move it to configuration.`],
+ mistakes:[`Checking that a user is logged in, but not that the record belongs to them (the most common API bug).`,`Long-lived access tokens with no revocation path.`,`Skipping <code>aud</code>/<code>iss</code> checks, or accepting the <code>none</code> algorithm.`,`Logging Authorization headers or passwords.`],
+ ask:[`Why return 404 rather than 403 for someone else's object?`,`What attack does refresh-token rotation help detect?`,`What do <code>iss</code> and <code>aud</code> validation prevent?`],
+ done:`Every endpoint has an explicit authorization rule, and a test fails if you remove it.`,
+ read:[[`FastAPI security tutorial`,`https://fastapi.tiangolo.com/tutorial/security/`],[`OWASP Password Storage Cheat Sheet`,`https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html`]]
+},
+{
+ id:7, title:`Error handling and API reliability`, goal:`Fail predictably, recover safely, and never leave half-finished work behind.`,
+ steps:[
+  [`7.1`,`HTTPException`,`Return appropriate HTTP errors.`],
+  [`7.2`,`@app.exception_handler()`,`Centralize handling of application exceptions.`],
+  [`7.3`,`Request IDs / correlation IDs`,`Trace one request across logs and services.`],
+  [`7.4`,`Timeouts`,`Prevent requests from waiting indefinitely on dependencies.`],
+  [`7.5`,`Bounded retries with backoff`,`Recover from transient failures without overwhelming services.`],
+  [`7.6`,`Idempotency keys`,`Prevent duplicate operations when clients retry payments or orders.`],
+  [`7.7`,`Circuit breakers`,`Temporarily stop repeated calls to a failing downstream service.`],
+  [`7.8`,`Graceful degradation`,`Keep essential functions available when nonessential dependencies fail.`],
+  [`7.9`,`Database rollback and cleanup`,`Prevent failed operations from leaving partially committed changes.`],
+  [`7.10`,`Rate limits and quotas`,`Protect against abuse and excessive consumption.`]
+ ],
+ notes:[[`warn`,`Don't retry every failed request. Retry only operations and errors for which retrying is safe, and use bounded retries with deadlines.`]],
+ code:{label:`One error envelope for the whole API`, text:`from fastapi import Request
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+def envelope(request: Request, status: int, code: str, message: str, details=None):
+    return JSONResponse(status_code=status, content={"error": {
+        "code": code, "message": message, "details": details,
+        "request_id": getattr(request.state, "request_id", None)}})
+
+@app.exception_handler(StarletteHTTPException)
+async def http_err(request, exc):
+    return envelope(request, exc.status_code, "http_error", str(exc.detail))
+
+@app.exception_handler(RequestValidationError)
+async def validation_err(request, exc):
+    return envelope(request, 422, "validation_error", "Invalid request", exc.errors())`},
+ practice:[`Add the error envelope and make sure every failure includes <code>request_id</code>.`,`Call an external API (a fake payment service) with a 3 second timeout and at most 3 retries with exponential backoff and jitter.`,`Add an <code>Idempotency-Key</code> header to <code>POST /orders</code>: same key plus same body returns the first result and creates no second order.`,`Stop the fake service and confirm your API degrades instead of hanging.`],
+ mistakes:[`No timeout at all (the default can be "wait forever").`,`Retrying non-idempotent writes, creating duplicate charges.`,`Retries with no backoff, which turn a small outage into a big one.`,`Leaking stack traces or SQL in error responses.`],
+ ask:[`Which of your endpoints are safe to retry, and why?`,`How does the server recognize a duplicate idempotency key?`,`What are the closed, open and half-open states of a circuit breaker?`],
+ done:`A killed dependency produces a fast, clear error and no partial data.`,
+ read:[[`FastAPI error handling`,`https://fastapi.tiangolo.com/tutorial/handling-errors/`],[`RFC 9457: Problem Details for HTTP APIs`,`https://datatracker.ietf.org/doc/html/rfc9457`]]
+},
+{
+ id:8, title:`Middleware, CORS and request controls`, goal:`Apply cross-cutting protections once, at the edge of the application.`,
+ steps:[
+  [`8.1`,`@app.middleware("http") or ASGI middleware`,`Add cross-cutting request/response behavior.`],
+  [`8.2`,`CORS configuration`,`Allow only the browser origins that need access.`],
+  [`8.3`,`Request ID middleware`,`Attach a traceable identifier to each request.`],
+  [`8.4`,`Request body size limits`,`Protect against oversized payloads.`],
+  [`8.5`,`Request timeouts`,`Limit excessive processing time; enforce at the server/proxy too.`],
+  [`8.6`,`Trusted host configuration`,`Reject unexpected host headers where appropriate.`],
+  [`8.7`,`HTTPS and proxy configuration`,`Secure transport and correctly handle forwarded headers.`],
+  [`8.8`,`Security headers`,`Apply relevant browser security protections.`]
+ ],
+ notes:[[`warn`,`Use CORS as a browser access policy, not as authentication. Non-browser clients can call your API regardless of browser CORS rules.`]],
+ code:{label:`CORS for one origin and a request-ID middleware`, text:`from uuid import uuid4
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["api.example.com"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://app.example.com"],   # never "*" with credentials
+    allow_methods=["GET", "POST", "PATCH", "DELETE"],
+    allow_headers=["Authorization", "Content-Type", "Idempotency-Key"],
+)
+
+@app.middleware("http")
+async def request_id_mw(request, call_next):
+    rid = request.headers.get("x-request-id") or str(uuid4())
+    request.state.request_id = rid
+    response = await call_next(request)
+    response.headers["x-request-id"] = rid
+    return response`},
+ practice:[`Allow exactly one browser origin; prove a request from another origin is blocked in the browser.`,`Reject bodies over 1 MB with 413 (also set the limit in your reverse proxy).`,`Put the API behind a local reverse proxy and make sure client IPs and HTTPS scheme are read correctly.`],
+ mistakes:[`<code>allow_origins=["*"]</code> combined with cookies or credentials.`,`Trusting <code>X-Forwarded-For</code> from any caller instead of only your proxy.`,`Believing CORS stops curl or server-side scripts.`],
+ ask:[`Why can't CORS replace authentication?`,`Why enforce body limits in the proxy as well as in the app?`,`Which proxy headers should the app trust, and from whom?`],
+ done:`Every response carries a request ID, and oversized or wrong-host requests are rejected early.`,
+ read:[[`FastAPI CORS`,`https://fastapi.tiangolo.com/tutorial/cors/`],[`MDN: CORS`,`https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS`]]
+},
+{
+ id:9, title:`Testing`, goal:`Prove the API behaves correctly before deploying it.`,
+ steps:[
+  [`9.1`,`pytest`,`Run repeatable automated tests.`],
+  [`9.2`,`TestClient`,`Test FastAPI endpoints without manually running a server.`],
+  [`9.3`,`pytest.mark.parametrize`,`Test multiple input variations efficiently.`],
+  [`9.4`,`app.dependency_overrides`,`Replace database or authentication dependencies in tests.`],
+  [`9.5`,`Unit tests`,`Test business logic independently.`],
+  [`9.6`,`Integration tests`,`Test actual database and external-service interactions.`],
+  [`9.7`,`End-to-end tests`,`Test complete workflows such as signup → login → create order.`],
+  [`9.8`,`Negative tests`,`Check invalid input, expired tokens, forbidden access and missing resources.`],
+  [`9.9`,`Concurrency tests`,`Find duplicate writes, race conditions and transaction problems.`],
+  [`9.10`,`Load and stress tests`,`Measure throughput, latency and failure behavior.`],
+  [`9.11`,`Migration tests`,`Verify schema changes work from a clean database and existing versions.`]
+ ],
+ notes:[[`warn`,`Don't test only successful responses. Production defects frequently occur at boundaries: duplicate requests, concurrent writes, permission checks and downstream timeouts.`]],
+ code:{label:`Your example test, extended with overrides and a permission boundary`, text:`import pytest
+from fastapi.testclient import TestClient
+
+@pytest.fixture
+def client(db_session):
+    app.dependency_overrides[get_db] = lambda: db_session
+    yield TestClient(app)
+    app.dependency_overrides.clear()
+
+def test_create_product(client):
+    response = client.post(
+        "/api/v1/products",
+        json={"name": "Keyboard", "price": "1500.00"},
+    )
+    assert response.status_code == 201
+
+@pytest.mark.parametrize("bad", [{"name": ""}, {"price": "-1"}, {}])
+def test_create_product_rejects_bad_input(client, bad):
+    assert client.post("/api/v1/products", json=bad).status_code == 422
+
+def test_user_cannot_read_other_users_order(client, alice_headers, bobs_order):
+    r = client.get(f"/api/v1/orders/{bobs_order.id}", headers=alice_headers)
+    assert r.status_code == 404`},
+ practice:[`Reach 30+ tests where at least a third are negative cases (401, 403, 404, 409, 422).`,`Write a concurrency test: two threads buy the last unit; exactly one must succeed.`,`Run Alembic <code>upgrade head</code> from an empty database in a test.`,`Load test with k6 or Locust and record p95 latency and error rate.`],
+ mistakes:[`Tests that share state and only pass in one order.`,`Mocking the database so heavily that no real SQL ever runs.`,`Chasing a coverage number while skipping permission tests.`],
+ ask:[`What does <code>dependency_overrides</code> let you swap, and what should you not swap?`,`Which bugs can a unit test never catch but an integration test will?`,`How would you prove no overselling under load?`],
+ done:`CI-ready suite that fails if you delete an authorization check or a database constraint.`,
+ read:[[`FastAPI testing`,`https://fastapi.tiangolo.com/tutorial/testing/`],[`pytest docs`,`https://docs.pytest.org/`]]
+},
+{
+ id:10, title:`Performance and scalability`, goal:`Find real bottlenecks, then fix them without breaking correctness.`,
+ steps:[
+  [`10.1`,`async def and await`,`Handle I/O concurrency when the called libraries support async operations.`],
+  [`10.2`,`Async database drivers and AsyncSession`,`Use nonblocking database I/O when appropriate.`],
+  [`10.3`,`httpx.AsyncClient`,`Make concurrent, nonblocking HTTP calls.`],
+  [`10.4`,`Query optimization and indexes`,`Reduce database execution time.`],
+  [`10.5`,`Keyset/cursor pagination`,`Improve pagination over large or frequently changing tables.`],
+  [`10.6`,`Redis caching`,`Cache expensive, frequently accessed data.`],
+  [`10.7`,`Cache invalidation and TTL`,`Keep cached values acceptably fresh.`],
+  [`10.8`,`Connection pooling`,`Limit connection creation overhead.`],
+  [`10.9`,`Compression and response size control`,`Reduce network transfer costs when useful.`],
+  [`10.10`,`Worker processes`,`Use multiple processes to utilize CPU cores and serve concurrent requests.`],
+  [`10.11`,`Profiling and benchmarking`,`Find actual bottlenecks before optimizing.`],
+  [`10.12`,`Database and worker capacity limits`,`Prevent overload from cascading across the system.`]
+ ],
+ bullets:{title:`Important distinctions`, items:[`<code>async</code> does not automatically make CPU-heavy processing faster.`,`Redis is not a replacement for a database.`,`More worker processes increase resource consumption and may require more database connections.`,`Caching requires a defined invalidation strategy, especially for user-specific or sensitive data.`]},
+ code:{label:`Keyset pagination: stays fast on page 10,000`, text:`def list_products(db, after_id: int = 0, limit: int = 50):
+    rows = db.execute(
+        select(Product)
+        .where(Product.id > after_id)     # uses the primary-key index
+        .order_by(Product.id)
+        .limit(limit + 1)                 # one extra row tells us if there is a next page
+    ).scalars().all()
+    has_more = len(rows) > limit
+    items = rows[:limit]
+    next_cursor = items[-1].id if has_more else None
+    return items, next_cursor
+
+# OFFSET 500000 makes the database walk and discard 500,000 rows first.`},
+ practice:[`Seed 1M rows. Time <code>OFFSET</code> vs keyset pagination at deep pages and write down the difference.`,`Cache <code>GET /products/{id}</code> in Redis with a TTL and invalidate on update.`,`Profile one slow endpoint before changing anything; record the before and after numbers.`],
+ mistakes:[`Calling blocking libraries inside <code>async def</code>, which freezes the event loop.`,`Caching per-user data under a shared key.`,`Optimizing from intuition with no profile or measurement.`],
+ ask:[`When does async give no benefit?`,`How do you choose a TTL, and what is the stale-data risk?`,`With 4 workers and a pool of 10, how many database connections can you open?`],
+ done:`You can show a benchmark where a specific change improved a specific number.`,
+ read:[[`FastAPI: async and await`,`https://fastapi.tiangolo.com/async/`],[`Use The Index, Luke`,`https://use-the-index-luke.com`]]
+},
+{
+ id:11, title:`Background jobs and batch processing`, goal:`Handle work that should not hold an HTTP request open.`,
+ steps:[
+  [`11.1`,`FastAPI BackgroundTasks`,`Small, noncritical work after a response.`],
+  [`11.2`,`Celery / task queue`,`Long-running or distributed jobs.`],
+  [`11.3`,`Redis or RabbitMQ`,`Broker messages between API and workers.`],
+  [`11.4`,`Job status endpoints`,`Let clients check queued, running, completed or failed jobs.`],
+  [`11.5`,`Chunking and bulk inserts`,`Process large CSV files and datasets in manageable batches.`],
+  [`11.6`,`Retry policy and dead-letter queues`,`Recover from failures and isolate repeatedly failing jobs.`],
+  [`11.7`,`Idempotent job handlers`,`Avoid duplicate results when a task is delivered more than once.`],
+  [`11.8`,`Scheduled jobs`,`Run recurring cleanup, reports or ETL tasks.`],
+  [`11.9`,`Progress tracking and checkpoints`,`Resume long jobs without restarting from the beginning.`]
+ ],
+ notes:[[`rule`,`For your data-engineering goals, this phase is especially useful: build a file-upload endpoint that creates a job, a worker that validates and loads records in chunks, and a status endpoint that reports progress.`]],
+ code:{label:`A chunk loader that is safe to run twice`, text:`from sqlalchemy.dialects.postgresql import insert
+
+@celery.task(bind=True, acks_late=True, max_retries=3, retry_backoff=True)
+def load_chunk(self, job_id: int, chunk_no: int):
+    rows = read_chunk(job_id, chunk_no)          # parse + validate
+    with SessionLocal() as db:
+        stmt = insert(ImportRow).values(rows).on_conflict_do_nothing(
+            index_elements=["job_id", "row_no"]  # re-delivery inserts nothing new
+        )
+        db.execute(stmt)
+        db.execute(update(Job).where(Job.id == job_id)
+                   .values(chunks_done=Job.chunks_done + 1))
+        db.commit()
+
+# POST /imports  -> save file, create Job(status="queued"), return 202 + job id
+# GET  /jobs/{id} -> {"status": "running", "chunks_done": 12, "chunks_total": 40}`},
+ practice:[`Upload a 50k-row CSV: the endpoint returns <code>202</code> and a job id immediately.`,`A worker validates and loads 1,000-row chunks; bad rows go to an errors table with row numbers.`,`Kill the worker mid-job, restart it, and confirm no duplicates and the job finishes.`],
+ mistakes:[`Using BackgroundTasks for work that must not be lost if the process restarts.`,`Handlers that are not idempotent, so a redelivered task doubles the data.`,`Loading the whole file into memory instead of streaming in chunks.`],
+ ask:[`Why return 202 instead of 200 for an import?`,`What does <code>acks_late</code> trade off?`,`Where do poison messages go, and who looks at them?`],
+ done:`Killing a worker at any moment never loses or duplicates data.`,
+ read:[[`Celery documentation`,`https://docs.celeryq.dev/en/stable/`],[`FastAPI background tasks`,`https://fastapi.tiangolo.com/tutorial/background-tasks/`]]
+},
+{
+ id:12, title:`Security hardening`, goal:`Assume hostile input and limited blast radius.`,
+ steps:[
+  [`12.1`,`Threat modeling`,`Identify what can be attacked and what needs protection.`],
+  [`12.2`,`Input and output validation`,`Prevent malformed input and unintended data exposure.`],
+  [`12.3`,`SQLAlchemy parameterized queries`,`Prevent SQL injection; avoid constructing SQL from untrusted input.`],
+  [`12.4`,`Resource-level permissions`,`Prevent insecure direct object reference vulnerabilities.`],
+  [`12.5`,`Rate limiting by identity/IP`,`Limit brute force and excessive traffic.`],
+  [`12.6`,`Upload validation and size limits`,`Reduce malicious file and resource-exhaustion risks.`],
+  [`12.7`,`Dependency and image scanning`,`Detect vulnerable packages and container images.`],
+  [`12.8`,`Audit logs`,`Record sensitive administrative and business actions.`],
+  [`12.9`,`PII redaction`,`Prevent passwords, tokens and sensitive personal data from leaking into logs.`],
+  [`12.10`,`Least-privilege database roles`,`Limit the impact of compromised credentials.`],
+  [`12.11`,`Encryption and key rotation`,`Protect sensitive data and credentials.`],
+  [`12.12`,`Security testing`,`Verify authorization boundaries, abuse controls and configuration.`]
+ ],
+ notes:[[`rule`,`Use the <a href="https://owasp.org/API-Security/" target="_blank" rel="noopener">OWASP API Security Top 10</a> as a security review checklist, especially for authorization, authentication, resource consumption and misconfiguration.`]],
+ code:{label:`Bounded uploads and safe queries`, text:`MAX_BYTES = 10 * 1024 * 1024
+ALLOWED = {"text/csv", "application/vnd.ms-excel"}
+
+@router.post("/imports", status_code=202)
+async def upload(file: UploadFile, user=Depends(require_admin)):
+    if file.content_type not in ALLOWED:
+        raise HTTPException(415, "Only CSV files are accepted")
+    data = await file.read(MAX_BYTES + 1)
+    if len(data) > MAX_BYTES:
+        raise HTTPException(413, "File too large")
+    ...
+
+# Safe: values are sent as bound parameters
+db.execute(select(User).where(User.email == email))
+
+# Unsafe: never build SQL by string formatting user input
+# db.execute(text(f"SELECT * FROM users WHERE email = '{email}'"))`},
+ practice:[`Walk your API against each OWASP API Top 10 item; write the result and fix each gap.`,`Rate limit <code>/login</code> per IP and per account; verify a 429 and a <code>Retry-After</code> header.`,`Add <code>pip-audit</code> and an image scanner (Trivy) to your checks.`,`Create a database role for the app that cannot drop tables; use a separate role for migrations.`],
+ mistakes:[`Trusting the content type or file extension alone.`,`Logging full request bodies, which contain passwords and tokens.`,`One superuser database credential used by everything.`],
+ ask:[`Which OWASP API risk is "change the ID in the URL"?`,`What would an attacker try first against your login endpoint?`,`Why does the app need a different database role than the migration tool?`],
+ done:`You have a written threat model and a security test that fails if an authorization rule is removed.`,
+ read:[[`OWASP API Security Top 10`,`https://owasp.org/API-Security/`],[`OWASP Cheat Sheet Series`,`https://cheatsheetseries.owasp.org/`]]
+},
+{
+ id:13, title:`Logging, monitoring and health checks`, goal:`Know when production breaks, why it breaks, and how severe it is.`,
+ steps:[
+  [`13.1`,`Python logging`,`Record application events and failures.`],
+  [`13.2`,`Structured JSON logs`,`Search and aggregate logs reliably.`],
+  [`13.3`,`Request/correlation IDs`,`Trace a request through multiple services.`],
+  [`13.4`,`/health/live`,`Indicate whether the application process is alive.`],
+  [`13.5`,`/health/ready`,`Indicate whether the application is ready to serve traffic.`],
+  [`13.6`,`Dependency health checks`,`Check required database or broker connectivity.`],
+  [`13.7`,`Prometheus metrics`,`Track request counts, error rates, latency and resource usage.`],
+  [`13.8`,`Grafana dashboards`,`Visualize operational metrics.`],
+  [`13.9`,`OpenTelemetry tracing`,`Follow requests across APIs, databases and downstream services.`],
+  [`13.10`,`Alerts and error tracking`,`Notify the team when important thresholds or failures occur.`],
+  [`13.11`,`SLOs and SLIs`,`Define measurable reliability and performance targets.`]
+ ],
+ notes:[[`warn`,`Health checks should be lightweight. Don't make liveness fail just because PostgreSQL is temporarily unavailable; otherwise, the orchestrator may repeatedly restart healthy application processes.`]],
+ code:{label:`Liveness vs readiness`, text:`from fastapi import Response
+from sqlalchemy import text
+
+@app.get("/health/live")
+def live():
+    return {"status": "ok"}                # process is up; touches nothing else
+
+@app.get("/health/ready")
+def ready(response: Response, db=Depends(get_db)):
+    try:
+        db.execute(text("SELECT 1"))       # can we serve real traffic?
+        return {"status": "ready"}
+    except Exception:
+        response.status_code = 503         # take me out of rotation, don't restart me
+        return {"status": "not_ready"}`},
+ practice:[`Emit one JSON log line per request with <code>request_id</code>, route, status and duration in ms.`,`Expose <code>/metrics</code>; build a Grafana panel for request rate, error rate and p95 latency.`,`Define one SLO (for example, 99.5% of requests succeed under 500 ms) and create one alert tied to it.`],
+ mistakes:[`Alerting on every error instead of on user-visible symptoms.`,`High-cardinality metric labels (user id, full URL with ids).`,`Free-text logs that can't be filtered.`],
+ ask:[`Why shouldn't liveness check the database?`,`What are the rate, errors and duration signals for an API?`,`How do an SLI, an SLO and an alert relate?`],
+ done:`You can answer "what broke, when, and for whom" using only your logs and dashboard.`,
+ read:[[`OpenTelemetry docs`,`https://opentelemetry.io/docs/`],[`Prometheus overview`,`https://prometheus.io/docs/introduction/overview/`]]
+},
+{
+ id:14, title:`Docker and production deployment`, goal:`Run the API reproducibly and securely outside your development machine.`,
+ steps:[
+  [`14.1`,`Dockerfile`,`Package the application and runtime dependencies.`],
+  [`14.2`,`.dockerignore`,`Keep unnecessary files and local secrets out of images.`],
+  [`14.3`,`Multi-stage builds`,`Reduce final image size and build-time dependencies.`],
+  [`14.4`,`Non-root container user`,`Reduce privileges if the container is compromised.`],
+  [`14.5`,`Docker Compose`,`Run API, database, Redis and workers locally or on a suitable single host.`],
+  [`14.6`,`Health checks and service dependencies`,`Coordinate startup and dependency readiness.`],
+  [`14.7`,`Environment-specific configuration`,`Separate development, staging and production settings.`],
+  [`14.8`,`Reverse proxy / ingress`,`Handle TLS, routing and appropriate request limits.`],
+  [`14.9`,`Load balancer`,`Distribute requests across multiple API instances.`],
+  [`14.10`,`Uvicorn worker/process configuration`,`Tune process count for available CPU and memory.`],
+  [`14.11`,`Cloud deployment`,`Deploy to a VM, container platform or managed application service.`],
+  [`14.12`,`Managed PostgreSQL and backups`,`Protect persistent data and reduce operational burden.`],
+  [`14.13`,`Secrets manager`,`Supply credentials securely at runtime.`],
+  [`14.14`,`Database migrations during releases`,`Roll out schema changes in a controlled, compatible order.`],
+  [`14.15`,`Rollback and recovery procedures`,`Recover from bad releases and failed deployments.`]
+ ],
+ notes:[[`rule`,`For real production deployments, remember that containers are replaceable; persistent data is not. Store database data on appropriate persistent storage or use a managed database. Do not rely on a container's writable filesystem for durable business records.`]],
+ code:{label:`Multi-stage, non-root image`, text:`FROM python:3.12-slim AS build
+WORKDIR /w
+COPY requirements.txt .
+RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
+
+FROM python:3.12-slim
+RUN useradd --create-home app
+WORKDIR /app
+COPY --from=build /wheels /wheels
+RUN pip install --no-cache-dir --no-index --find-links=/wheels /wheels/*.whl \\
+    && rm -rf /wheels
+COPY app ./app
+USER app
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]`},
+ practice:[`Compose file with API, Postgres, Redis and a worker; data lives on a named volume.`,`Build the image, run it as a non-root user, and keep secrets out of the image (check with <code>docker history</code>).`,`Deploy to a VM or a managed container service behind HTTPS.`,`Run migrations as a separate release step, then perform and time a rollback.`],
+ mistakes:[`Baking secrets into an image or committing them in compose files.`,`Running migrations from every replica at startup, so they race each other.`,`Using the <code>latest</code> tag, so you can't tell what is running.`,`Treating the container disk as durable storage.`],
+ ask:[`Why run migrations as a single release step?`,`4 replicas x 4 workers x pool of 10: is your Postgres ready for that?`,`How would you roll back a release that included a migration?`],
+ done:`A fresh machine goes from nothing to a running HTTPS API using your documented steps, and you have restored a backup.`,
+ read:[[`FastAPI in containers`,`https://fastapi.tiangolo.com/deployment/docker/`],[`Docker multi-stage builds`,`https://docs.docker.com/build/building/multi-stage/`]]
+},
+{
+ id:15, title:`CI/CD and release management`, goal:`Make every change reviewed, tested, traceable and reversible.`,
+ steps:[
+  [`15.1`,`Git branches and pull requests`,`Review changes before merging.`],
+  [`15.2`,`Linting and formatting`,`Catch style issues and basic defects early.`],
+  [`15.3`,`Static type checking`,`Detect incompatible types before runtime.`],
+  [`15.4`,`Automated test pipeline`,`Run tests on every proposed change.`],
+  [`15.5`,`Dependency and security scans`,`Catch known vulnerabilities before release.`],
+  [`15.6`,`Docker image build and tagging`,`Create a reproducible deployment artifact.`],
+  [`15.7`,`Container registry`,`Store versioned images.`],
+  [`15.8`,`Staging deployment`,`Test changes in a production-like environment.`],
+  [`15.9`,`Smoke tests`,`Confirm critical endpoints work after deployment.`],
+  [`15.10`,`Controlled production rollout`,`Release gradually where supported.`],
+  [`15.11`,`Rollback strategy`,`Restore a known-good version when necessary.`],
+  [`15.12`,`Release notes and change tracking`,`Make deployments traceable.`]
+ ],
+ notes:[[`rule`,`A useful starting toolchain is GitHub Actions, Docker, a container registry and one deployment target. Add Kubernetes only when the operational requirements justify it.`]],
+ code:{label:`A first GitHub Actions pipeline`, text:`name: ci
+on: [pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://postgres:test@localhost:5432/postgres
+      JWT_SECRET: ci-only-secret
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: test }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+      - run: ruff check . && ruff format --check .
+      - run: mypy app
+      - run: pytest -q`},
+ practice:[`Protect <code>main</code>: merges only through pull requests with passing checks.`,`Pipeline stages: lint, type check, test, security scan, build image tagged with the commit SHA, push to registry.`,`Auto-deploy to staging, run a smoke test (<code>/health/ready</code> plus one real read), then deploy to production by hand approval.`,`Practice rollback by redeploying the previous image tag.`],
+ mistakes:[`Allowing merges while the pipeline is red.`,`Deploying a rebuilt image to production instead of the exact image tested in staging.`,`Migrations that drop or rename columns in the same release as the code change.`],
+ ask:[`Why tag images with the commit SHA?`,`What is the expand/contract approach to schema changes?`,`What should a smoke test verify, and what should it not try to?`],
+ done:`A merged pull request reaches staging with no manual steps and can be rolled back in minutes.`,
+ read:[[`GitHub Actions docs`,`https://docs.github.com/en/actions`],[`Ruff linter and formatter`,`https://docs.astral.sh/ruff/`]]
+},
+{
+ id:16, title:`Advanced production patterns`, goal:`Learn these after you can build and deploy a secure, tested monolithic API.`,
+ steps:[
+  [`16.1`,`Idempotent writes and optimistic locking`,`Prevent duplicate operations and lost updates.`],
+  [`16.2`,`Outbox pattern`,`Reliably publish events alongside database transactions.`],
+  [`16.3`,`Event-driven architecture`,`Decouple services that communicate through events.`],
+  [`16.4`,`API gateway`,`Centralize routing and selected cross-cutting policies.`],
+  [`16.5`,`Microservices`,`Split independently deployable domains when the organizational and technical benefits justify the cost.`],
+  [`16.6`,`Distributed tracing`,`Diagnose latency across service boundaries.`],
+  [`16.7`,`Saga patterns`,`Coordinate long-running business transactions across services.`],
+  [`16.8`,`Eventual consistency`,`Design for systems where updates propagate asynchronously.`],
+  [`16.9`,`Consumer-driven contract testing`,`Prevent incompatible changes between services.`],
+  [`16.10`,`Disaster recovery drills`,`Verify backup restoration and recovery objectives.`]
+ ],
+ notes:[[`warn`,`Do not start with microservices, Kafka and Kubernetes simply because they sound advanced. First build a well-structured API that works reliably as a single deployable application.`]],
+ code:{label:`Outbox plus optimistic locking in one transaction`, text:`class Product(Base):
+    ...
+    version: Mapped[int] = mapped_column(default=1)
+
+def place_order_and_emit(db, order: Order):
+    db.add(order)
+    db.flush()                                    # order.id now exists
+    db.add(OutboxEvent(topic="order.created",
+                       payload={"order_id": order.id}))
+    db.commit()                                   # order and event: both or neither
+    # a separate worker reads unsent outbox rows and publishes them
+
+# Optimistic lock: fails if someone else changed the row first
+rows = db.execute(
+    update(Product)
+    .where(Product.id == pid, Product.version == seen_version)
+    .values(stock=new_stock, version=seen_version + 1)
+).rowcount
+if rows == 0:
+    raise ConcurrentUpdate()                      # map to HTTP 409`},
+ practice:[`Add a <code>version</code> column and return 409 on a stale update.`,`Add an outbox table and a publisher worker; then crash the publisher and prove no event is lost.`,`Run a disaster recovery drill: delete the staging database and restore from backup, timing it.`,`Write an ADR explaining why your project is still a monolith.`],
+ mistakes:[`Writing to the database and a message broker separately, so one can succeed while the other fails.`,`Splitting into services before there are team or scaling reasons.`,`Never actually restoring a backup until the day you need one.`],
+ ask:[`What failure does the outbox pattern prevent?`,`When would splitting a service be worth the cost?`,`What does eventual consistency mean for a user looking at their order?`],
+ done:`You can explain, with evidence from your own project, why each advanced pattern is or isn't needed.`,
+ read:[[`Transactional outbox pattern`,`https://microservices.io/patterns/data/transactional-outbox.html`],[`Google SRE book`,`https://sre.google/sre-book/table-of-contents/`]]
+}
+];
+
+const WEEKS = [
+ {n:1, title:`Core REST API`, week:`Week 1`, items:[`Requirements and HTTP methods`,`FastAPI routers and Pydantic schemas`,`SQLAlchemy CRUD and PostgreSQL`,`Pagination, filtering and sorting`]},
+ {n:2, title:`Production foundations`, week:`Week 2`, items:[`Service layer and transaction handling`,`Authentication and object-level authorization`,`Centralized error handling`,`Pytest unit and integration tests`]},
+ {n:3, title:`Reliability and performance`, week:`Week 3`, items:[`Logging and request IDs`,`Rate limiting and security hardening`,`Redis caching and query optimization`,`Background jobs and batch processing`]},
+ {n:4, title:`Deployment`, week:`Week 4`, items:[`Docker and environment configuration`,`Migrations and persistent database`,`CI/CD and staging deployment`,`Monitoring, health checks and backups`]}
+];
+
+const READY = [
+ `Request and response contracts are documented.`,
+ `Authentication and resource-level authorization are tested.`,
+ `Database transactions, constraints and migrations are handled correctly.`,
+ `Secrets are managed securely and HTTPS is configured.`,
+ `Errors are consistent and sensitive data is not logged.`,
+ `Automated tests cover success, failure and permission boundaries.`,
+ `Rate limits, timeouts and resource limits are configured.`,
+ `Logs, metrics, alerts and health checks work.`,
+ `Deployment, rollback, backups and restoration have been tested.`,
+ `Load testing demonstrates acceptable latency and error rates for the expected workload.`
+];
+
+/* ---------------- STATE ---------------- */
+const KEY = "api-roadmap-progress-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { state = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+/* ---------------- HELPERS ---------------- */
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+/* ---------------- RENDER ---------------- */
+const phasesEl = $("#phases");
+PHASES.forEach(p => {
+  const sec = document.createElement("section");
+  sec.className = "phase"; sec.id = "phase-" + p.id;
+  let h = `<div class="phead"><div class="pnum">${p.id}</div><div><h2>Phase ${p.id}: ${p.title}</h2><p class="goal"><b>Goal:</b> ${p.goal}</p></div><div class="count" id="pc-${p.id}"></div></div>`;
+  h += `<ul class="steps">` + p.steps.map(s => {
+    const id = "s" + s[0];
+    return `<li data-id="${id}"><input type="checkbox" id="${id}" aria-label="Mark step ${s[0]} done"><span class="sn">${s[0]}</span><label for="${id}" class="sc">${esc(s[1])}</label><span class="sw">${s[2]}</span></li>`;
+  }).join("") + `</ul>`;
+  if (p.flow) h += `<h3 style="margin-top:16px">Example of the request flow</h3><ol class="flow">` + p.flow.map(f => `<li>${f}</li>`).join("") + `</ol>`;
+  if (p.tree) h += `<pre aria-label="Suggested structure">${esc(p.tree)}</pre>`;
+  if (p.bullets) h += `<div class="callout"><b>${p.bullets.title}</b><ul style="margin:6px 0 0;padding-left:20px">` + p.bullets.items.map(i => `<li>${i}</li>`).join("") + `</ul></div>`;
+  (p.notes || []).forEach(n => { h += `<div class="callout ${n[0]==="warn"?"warn":""}">${n[1]}</div>`; });
+  h += `<details class="dive"><summary>Go deeper: build, avoid, check, read</summary><div class="inner">`;
+  h += `<div class="full"><h4>${p.code.label}</h4><pre>${esc(p.code.text)}</pre></div>`;
+  h += `<div><h4>Build this</h4><ul>${p.practice.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
+  h += `<div><h4>Common mistakes</h4><ul>${p.mistakes.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
+  h += `<div><h4>Check yourself</h4><ul>${p.ask.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
+  h += `<div><h4>Read</h4><ul>${p.read.map(r=>`<li><a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a></li>`).join("")}</ul></div>`;
+  h += `<div class="full"><span class="tag">Done when</span> ${p.done}</div>`;
+  h += `</div></details>`;
+  sec.innerHTML = h;
+  phasesEl.appendChild(sec);
+});
+
+const weeksEl = $("#weeks");
+WEEKS.forEach(w => {
+  const d = document.createElement("div"); d.className = "panel";
+  d.innerHTML = `<div class="week"><h3>${w.n}. ${w.title}</h3><small>${w.week}</small></div><ul class="check">` +
+    w.items.map((t,i) => { const id = `w${w.n}-${i}`; return `<li><label><input type="checkbox" data-plan id="${id}"><span>${t}</span></label></li>`; }).join("") + `</ul>`;
+  weeksEl.appendChild(d);
+});
+$("#readylist").innerHTML = READY.map((t,i) => `<li><label><input type="checkbox" data-ready id="r${i}"><span>${t}</span></label></li>`).join("");
+
+/* spine + jump list */
+const spine = $("#spine"), jump = $("#jump");
+function addNav(href, label, id, numLabel){
+  const li = document.createElement("li");
+  li.innerHTML = `<a href="${href}"><span class="node" id="node-${id}">${numLabel}</span><span class="t">${label}</span></a>`;
+  spine.appendChild(li);
+  const o = document.createElement("option"); o.value = href; o.textContent = label; jump.appendChild(o);
+}
+addNav("#top","Overview","top","&#9679;");
+PHASES.forEach(p => addNav("#phase-"+p.id, p.title, "p"+p.id, p.id));
+addNav("#plan","4-week plan","plan","+");
+addNav("#capstone","Capstone project","cap","&#9733;");
+addNav("#ready","Readiness checklist","ready","&#10003;");
+jump.addEventListener("change", () => { location.hash = jump.value; });
+
+/* ---------------- PROGRESS ---------------- */
+function refresh(){
+  let total = 0, done = 0;
+  PHASES.forEach(p => {
+    const n = p.steps.length;
+    const d = p.steps.filter(s => state["s"+s[0]]).length;
+    total += n; done += d;
+    $("#pc-"+p.id).textContent = `${d} / ${n} steps`;
+    const node = $("#node-p"+p.id);
+    node.style.setProperty("--p", Math.round(100*d/n));
+    node.classList.toggle("done", d === n);
+  });
+  const planAll = $$("input[data-plan]"), planDone = planAll.filter(i => i.checked).length;
+  const readyAll = $$("input[data-ready]"), readyDone = readyAll.filter(i => i.checked).length;
+  $("#plancount").textContent = `${planDone} / ${planAll.length}`;
+  $("#readycount").textContent = `${readyDone} / ${readyAll.length}`;
+  $("#node-plan").style.setProperty("--p", Math.round(100*planDone/planAll.length));
+  $("#node-ready").style.setProperty("--p", Math.round(100*readyDone/readyAll.length));
+  $("#node-plan").classList.toggle("done", planDone === planAll.length);
+  $("#node-ready").classList.toggle("done", readyDone === readyAll.length);
+  const pct = total ? Math.round(100*done/total) : 0;
+  $("#overallfill").style.width = pct + "%";
+  $("#overallbar").setAttribute("aria-valuenow", pct);
+  $("#overalltext").textContent = `${done} of ${total} steps done (${pct}%)`;
+  $$(".steps li").forEach(li => li.classList.toggle("on", !!state[li.dataset.id]));
+}
+
+$$("input[type=checkbox]").forEach(cb => {
+  cb.checked = !!state[cb.id];
+  cb.addEventListener("change", () => { if (cb.checked) state[cb.id] = true; else delete state[cb.id]; save(); refresh(); });
+});
+$("#resetbtn").addEventListener("click", () => {
+  if (!confirm("Clear all saved progress?")) return;
+  state = {}; save(); $$("input[type=checkbox]").forEach(cb => cb.checked = false); refresh();
+});
+$("#themebtn").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+});
+refresh();
+</script>
+</body>
+</html>

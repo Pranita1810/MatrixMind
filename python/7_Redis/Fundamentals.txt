@@ -14,3 +14,7 @@ Working :
  2. Cache Hit - If the data is not found in redis, the request is forwarded to the main database.
  3. Cache Update - The data retrieved from the database is stored in redis for future requests.
  4. Response - The API Gatway sends the final response to the client using data from redis or the database.
+
+POINTS :
+- It uses RESP protocol to communicate. RESP is a communication protocol between Redis client & Redis server.
+- It also uses hiredis to parse response from server, hiredis is written in C which makes it faster.

@@ -180,3 +180,11 @@
                     Instead of your app repeatedly asking "any new data?" (polling), the other service calls YOUR API endpoint the moment something happens (push, not pull).
                     Example : Payment gateway hits your "/webhook/payment-success" endpoint the instant a payment completes.
                     Security note : Always verify the webhook signature header to confirm it really came from the expected sender, not a random POST from anyone.
+					
+					
+23. FastAPI Background Jobs:
+					FastAPI background jobs let you run a task after sending the HTTP response, so the client doesn't have to wait for that task to finish.
+					Imagine a user registers. You want to send a welcome email, but you don't want them to wait for the email to be sent.
+					
+					
+24. Celery : 	Celery is a Python task queue that runs heavy or time-consuming tasks in separate worker processes instead of blocking your FastAPI API.
