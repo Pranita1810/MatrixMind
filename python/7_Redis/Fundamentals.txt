@@ -9,7 +9,7 @@ Real World ;
  - Facebook & Insta uses redis to handle real time notification, feeds and user acitivity for fast and responsive interatction.
 
 Working :
- - Redis acts as a caching layer between database and client. When a client asks for data the API Gateway forward the request to redis.
+ - Redis acts as a caching layer between database and client. When a client asks for data the API Gateway forward the request to redis server.
  1. Request handling - The client request is routed through the API Gateway which first checks redis for the required data.
  2. Cache Hit - If the data is not found in redis, the request is forwarded to the main database.
  3. Cache Update - The data retrieved from the database is stored in redis for future requests.
@@ -18,3 +18,9 @@ Working :
 POINTS :
 - It uses RESP protocol to communicate. RESP is a communication protocol between Redis client & Redis server.
 - It also uses hiredis to parse response from server, hiredis is written in C which makes it faster.
+
+CONCEPTS :
+1. RDI - Redis data integration is a service that allows user to connect live datbase to redis database.
+2. RIOT-X - Import/Export files.
+3. r-CLI  - Redis command line interface
+4. r-GUI  - Interactive tool for redis.
