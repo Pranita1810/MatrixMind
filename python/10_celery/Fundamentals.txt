@@ -1,0 +1,29 @@
+***** PYTHON-CELERY *****
+
+Celery is a task queue implementation for python web application used to asynchronously execute work outside the HTTP cycle.
+Let's say we have an API that generates sales report in 30 seconds so here, 
+
+Without Celery :
+- API receives the request --> generates report --> user waits for 30 sec.
+with Celery:
+- API receives the request --> Send a task to Celery --> returns immediately while a worker generates the report in the background.
+(Note : It only returns task id and status of the task not completed task itself until it's completed.)
+
+{
+  "task_id": "a81f92",
+  "status": "processing"
+}
+
+
+- COMPONENTS :
+    1. Producer - An application that submits a task.
+    2. Message Broker - Redis or memory storage that stores and delivers queued task messages.
+    3. Worker  - A separate process that executes the task.
+    4. Result backend  - Stores task results and states when configured.
+
+- COMMON USAGE :
+    1. Generating large reports.
+    2. Sending emails and notifications.
+    3. Processing uploaded files or data.
+    4. Running scheduled background jobs.
+    5. Retrying failed tasks.
