@@ -1,0 +1,14 @@
+***** PYTHON TECH TO USE ***** 
+
+
+1. duckdb : Duck db is a python's analytical database desigend for fast data analytics directly on you machine used for
+            CSV, Parquet and DataFrames. It is columnr based data storage that makes it faster.
+
+2. Pyarrow : It is a python library for Working efficiently with columnar data formats, especially apache arrow and parquet.
+
+3. dask : It scales pandas like data processing to larger than memory datasets using parallel and distributed computing. For e.g.
+          instead of processing data on only one memory core it can process data on multiple memory cores or computers.
+
+4. great-expectations : Great Expectations is a Python data quality testing tool. It checks whether your data meets defined rules before you use it for analytics.
+
+5. memory-profiler : It is a python lib that measures how much RAM your python code uses, line by line.

@@ -43,7 +43,8 @@
    2. Drop lower-order terms: O(n^2 + n + 100) simplifies to O(n^2).
    3. Sequential loops add together: Loop(n) + Loop(m) = O(n + m).
    4. Nested operations multiply: Loop(n) inside Loop(n) = O(n * n) = O(n^2).
-   5. Halving search space implies logarithms: Dividing search space by 2 each step = O(log n).
+   5. Halving search space implies logarithms: Dividing search space by 2 each step = O(log n).
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 6. Think Like a Programmer :

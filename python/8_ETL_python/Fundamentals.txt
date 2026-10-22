@@ -1,0 +1,19 @@
+***** DATA PIPELINE *****
+
+- Data pipeline is a set of tools & processes for collecting, transforming & delivering data from one or more sources to the destination where it can be used.
+- Important Components :
+    1. Source 
+    2. Destination
+    3. Data flow
+    4. Processing
+    5. Workflow
+    6. Monitoring
+
+- Types :
+    1. Batch pipeline
+    2. Real-Time pipeline
+    3. Cloud-Native pipeline
+    4. Open-Source pipeline
+    5. ETL | ELT
+
+- Now when we are building data pipeline there are no static defined steps, we have build data pipeline according to the organization's requirements.
