@@ -1,0 +1,57 @@
+Causal Inference — determine whether X actually caused Y.
+
+
+
+Advanced A/B Testing — power analysis, sequential testing, CUPED.
+
+
+
+Product Analytics — funnels, cohorts, retention, churn.
+
+
+
+Predictive Analytics — regression, classification, feature engineering.
+
+
+
+Time-Series Forecasting — ARIMA, Prophet, backtesting.
+
+
+
+Customer Analytics — CLV, RFM, segmentation.
+
+
+
+Experimentation & Optimization — uplift modeling, treatment effects.
+
+
+
+Root-Cause Analysis — anomaly detection, driver decomposition.
+
+
+
+Advanced Statistics — Bayesian inference, confidence intervals, hypothesis testing.
+
+
+
+KPI & Metric Design — North Star metrics, metric trees, guardrail metrics.
+
+
+
+Analytics Engineering — dbt, semantic layers, data quality, metric consistency.
+
+
+
+Decision Science — optimization, scenario analysis, sensitivity analysis.
+
+
+
+Advanced Visualization — statistical storytelling, executive dashboards.
+
+
+
+Performance Optimization — query plans, columnar processing, Polars/Pandas/NumPy benchmarking.
+
+
+
+AI-Augmented Analytics — LLM-powered SQL, automated insights, anomaly explanations.

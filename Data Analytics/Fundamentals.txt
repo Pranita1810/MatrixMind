@@ -38,8 +38,8 @@
 	5. AI & Predictive Analytics: Scikit-Learn, PyTorch, Hugging Face, OpenAI / Anthropic APIs.
 
 
--- Analytical Methodologies --
 	1. Descriptive Analytics: "What happened?" (Central tendency, summary statistics, KPIs, variance analysis).
+-- Analytical Methodologies --
 	2. Diagnostic Analytics: "Why did it happen?" (Root Cause Analysis [RCA], cohort drill-downs, cross-tabulations).
 	3. Time Series Analytics: "How does it change over time?" (Moving averages, trend decomposition, seasonality, growth rates).
 	4. Inferential Analytics: "Can we generalize from a sample?" (Hypothesis testing, Student's t-test, Chi-Square test, ANOVA, A/B testing, Confidence Intervals).

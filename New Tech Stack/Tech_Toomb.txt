@@ -1,0 +1,9 @@
+***** THIS IS TECH TOOMB *****
+
+- Here you will find tools & hacks to solve day to day problems and implement in your projects.
+
+
+1. NVIDIA NIM & OpenRouter      : Free LLM API keys.
+2. Claude Code Brag             : A skill that turns your conmpleted project into a short lauch video.
+3. **Plausible Analytics**      : privacy-friendly alternative to Google Analytics. It tracks website visitors, traffic sources, page views, and conversions without cookies.
+4. ECC-Main                     : It is an open source toolkit that makes AI coding agents follow a more structred, production-oriented developement workflow. (check ECC file in same dir.)
