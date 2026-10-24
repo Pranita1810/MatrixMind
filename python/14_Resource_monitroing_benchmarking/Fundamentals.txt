@@ -1,0 +1,20 @@
+****** ROSOURCE MONITORING & BENCHMARKING ******
+
+- So the resource monitoring & benchmarking is a process of continous analysis and heath check up a machine, where services are deployed.
+
+IMP Components :
+    1. CPU 
+    2. RAM
+    3. Disk
+    4. Network
+    5. DataBase
+    6. API
+    7. Pipeline
+
+
+MODULES :
+    1. logging
+    2. psutil
+    3. structlog
+    4. prometheus-client
+    5. opentelemetry-sdk
