@@ -1,0 +1,25 @@
+**** TESTING ****
+
+- Testing is a proces of verifying that a program produces correct results, behaves as expected and remains stable as changes are made. It is essential practive for ensuing 
+  code reliability and long term maintainability.
+
+- OBJECTIVES :
+    1. Detect defects at an early stage.
+    2. Ensure consistent and reialble behaviour.
+    3. Supports safe code modification.
+    4. Reduce overall development.
+
+
+- STRATEGIES :
+    1. Unit Testing - It focuses on testing individual units or components of code in isolation. Each test veriifies that a small piece of functionality behaves as expected.
+    2. Integration Testing - Checks how different components or modules work togahter. It helps identify issues that arise from interaction between modules.
+    3. Functional Testing - Validates the behavious or an application from the user's perspective. This ensure that the code runs according to the requirements.
+    4. Exploratory Testing - It is an informal, unscriptable approach where testers actively explore that application. It relies on human intuition and creativity.
+
+
+	
+Your main goal is to verify:
+1. Correct output — does the function return what you expect?
+2. Correct failure behavior — does it handle invalid input and errors properly?
+3. Correct interactions — does it use the database, Redis, and APIs correctly?
+4. Correct behavior under load — does it remain reliable with concurrent requests?

@@ -45,7 +45,7 @@ r = redis.Redis(
 router = APIRouter(tags=["Market & Users"])
 
 # ----------- MAIN FAST APP -----------
-app = FastAPI(
+app = FastAPI(  
     title="MoneyHoney Data API",
     description="High-performance financial market data endpoints",
     version="1.0.0",
