@@ -1,0 +1,6 @@
+BEGIN TRANSACTION 
+SELECT * FROM order_info;
+
+
+BEGIN;
+SELECT * FROM order_info;

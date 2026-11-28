@@ -1,0 +1,29 @@
+
+
+- MongoDB is a opens-source, document oriented NoSQL dataabse designed to store & manage large volume of data efficiently using a flexible,
+  Json like document.
+
+  1. It stores data in BSON(Binary Json document).
+  2. Supports dynamic schemas.
+
+
+- MongoDB HIERARCHY : 
+  MongoDB Cluster
+    └── Database
+          └── Collection
+                └── Document
+                      └── Field
+                            └── Value
+
+EMBEDDING & REFERENCING :
+	1. Embedding -
+		○ These are two ways to establish relations between two documents in No-SQL. For e.g. in normal database wee store customer table & order table in two different tables by building relation, in No-SQL we store customer & orders in same table.
+		○ Engineer should use this data modeling technique when related data are frequently accessed. One to few relationship.
+		
+	2. Referencing -
+		○ It stores data in separate document by building relation using ID, like traditional databases.
+		○ Use this when data grows significantly, when you want to avoid duplication of data & normalization.
+
+TTL (TIME TO LIVE) :
+	- Time to live is a concept where data automatically delete after a specific period of time.
+It is used to store cache data, OTP expiration like works, temp sessions etc
